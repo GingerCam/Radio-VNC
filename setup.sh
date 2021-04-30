@@ -21,7 +21,7 @@ curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/main/config/dhcpcd.c
 curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/main/config/dnsmasq.conf -o /etc/dnsmasq.conf
 curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/main/config/hostapd.conf -o /etc/hostapd/hostapd.conf
 
-echo ""DAEMON_CONF="/etc/hostapd/hostapd.conf" >> "/etc/defaults/hostapd"
+echo ""DAEMON_CONF="/etc/hostapd/hostapd.conf" >> "/etc/default/hostapd"
 echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 
 
