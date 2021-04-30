@@ -27,14 +27,10 @@ echo ""DAEMON_CONF="/etc/hostapd/hostapd.conf" >> "/etc/default/hostapd"
 echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 echo "sudo -u pi vncserver -randr=1400x900" >> /etc/rc.local
 systemctl unmask hostapd
-update-rc.d hostapd enable
+systemctl enable hostapd
 hostnamectl set-hostname 'Radio-VNC'
 
-echo"
-Network==Radio-VNC
-ip address==192.168.4.1
-hostname==Radio-VNC
-" >> /home/pi/info.txt
+echo"Network==Radio-VNC | ip address==192.168.4.1 | hostname==Radio-VNC" >> /home/pi/info.txt
 
 echo "Radio-VNC is installed"
 echo "System will reboot in 5 seconds"
