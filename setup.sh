@@ -13,7 +13,7 @@ sleep 10
 echo "Radio-VNC will install hostapd, dnsmasq, GQRX, pixel desktop, vnc-server and all of their dependencies."
 
 apt update && apt upgrade -y 
-apt install -y hostapd dnsmasq gqrx-sdr raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer
+apt install -y hostapd dnsmasq gqrx-sdr raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet
 
 
 
@@ -32,7 +32,7 @@ hostnamectl set-hostname 'Radio-VNC'
 
 echo"Network==Radio-VNC | ip address==192.168.4.1 | hostname==Radio-VNC" >> /home/pi/info.txt
 
-echo "Radio-VNC is installed"
+figlet Radio-VNC is   installed
 echo "System will reboot in 5 seconds"
 sleep 5
 reboot
