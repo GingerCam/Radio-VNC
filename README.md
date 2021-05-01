@@ -14,4 +14,5 @@ It is recomended to install to a new SD card or USB drive so you don't loose any
 To do list
 
 Add an uninstall script 
+
 Maybe make it an application rather than comsuming a whole SD card for this project
