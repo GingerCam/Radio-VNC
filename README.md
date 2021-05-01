@@ -1,5 +1,6 @@
 # Radio-VNC
-This project is for VNC without internet to control an SDR
+Radio-VNC is a project that allows you to control an SDR with your phone, you can control your pi by connecting to phone or laptop to the WI-FI network produced by the pi. Secondly you use a VNC client to connect to the Pi's Ip address (192.168.4.1)
+It is recomended to change the default password for the Pi user.
 
 It uses GQRX to control the SDR and hostapd and dnsmasq for the access point
 
