@@ -5,6 +5,8 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 echo "Radio-VNC written by GingerCam https://github.com/GingerCam"
+echo ""
+sleep 1
 echo "You are about to install Radio-VNC"
 echo "Do you want to continue?"
 echo "Press CTRL + C in the next 10 seconds to cancel"
@@ -22,6 +24,7 @@ echo "Config files will be downloaded"
 curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/main/config/dhcpcd.conf -o /etc/dhcpcd.conf
 curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/main/config/dnsmasq.conf -o /etc/dnsmasq.conf
 curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/main/config/hostapd.conf -o /etc/hostapd/hostapd.conf
+
 echo "Config files have been downloaded"
 sleep 1
 
@@ -30,13 +33,16 @@ echo ""DAEMON_CONF="/etc/hostapd/hostapd.conf" >> "/etc/default/hostapd"
 echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 echo "sudo -u pi vncserver -randr=1400x900" >> /etc/rc.local
 echo ""
+
 echo "Setting up hostapd"
 sleep 1
 systemctl unmask hostapd
 systemctl enable hostapd
+
 echo "Changing hostname to Radio-VNC"
 sleep 1
 hostnamectl set-hostname 'Radio-VNC'
+
 echo "Setting up GQRX to start on boot"
 sleep 1
 mkdir /home/pi/.config/autostart
@@ -47,6 +53,7 @@ echo "Check /home/pi/info.txt for more infomation"
 sleep 2
 echo ""
 echo ""
+
 figlet Radio-VNC is installed
 echo "System will reboot in 5 seconds"
 sleep 5
