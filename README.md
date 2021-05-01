@@ -5,6 +5,8 @@ It uses GQRX to control the SDR and hostapd and dnsmasq for the access point
 
 # Easy install on Raspberry Pi
 
+First you need to install Raspberry Pi OS lite to an SD card, then boot it up and execute the command:
+
 "curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/main/setup.sh | sudo bash"
 
 This project is being actively worked on by myself (GingerCam) and any feedback is greatly appreciated.
