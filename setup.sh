@@ -67,7 +67,7 @@ hostnamectl set-hostname 'Radio-VNC'
 
 echo "Setting up GQRX to start on boot"
 sleep 1
-mkdir -p /home/pi/.config/autostart
+sudo -u pi mkdir -p /home/pi/.config/autostart
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/main/other-files/gqrx.desktop -o /home/pi/.config/autostart/gqrx.desktop
 
 echo "Network==Radio-VNC | Network-Password==RaspberryRadio | ip address==192.168.4.1 | hostname==Radio-VNC" >> /home/pi/info.txt
