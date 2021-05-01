@@ -30,7 +30,7 @@ systemctl unmask hostapd
 systemctl enable hostapd
 hostnamectl set-hostname 'Radio-VNC'
 
-echo"Network==Radio-VNC | ip address==192.168.4.1 | hostname==Radio-VNC" >> /home/pi/info.txt
+echo"Network==Radio-VNC | Network-Password==RaspberryRadio | ip address==192.168.4.1 | hostname==Radio-VNC" >> /home/pi/info.txt
 
 figlet Radio-VNC is   installed
 echo "System will reboot in 5 seconds"
