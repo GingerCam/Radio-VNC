@@ -5,10 +5,15 @@ It uses GQRX to control the SDR and hostapd and dnsmasq for the access point
 
 # Requirements
 Any Raspberry Pi (The later ones are preferable, as SDR's use a bit of CPU)
+
 A USB SDR
+
 An aerial (For better reception)
+
 An active internet connection (For the setup process)
+
 A wireless interface (For the WI-FI network)
+
 Raspberry Pi OS lite installed on the pi
 
 # Easy install on Raspberry Pi
