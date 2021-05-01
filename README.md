@@ -11,7 +11,7 @@ This project is being actively worked on by myself (GingerCam) and any feedback 
 
 It is recommended to install to a new SD card or USB drive so you don't loose any data.
 
-#To do list
+# To do list
 
 Add an uninstall script
 
