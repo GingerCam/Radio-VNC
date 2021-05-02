@@ -23,7 +23,7 @@ apt install -y hostapd dnsmasq gqrx-sdr raspberrypi-ui-mods curl wget realvnc-vn
 
 echo "Config files will be downloaded"
 
-mkdir -p /home/pi/.config/autostart && mkdir -p /home/pi/.config/lxsession/LXDE-pi
+mkdir -p /home/pi/.config/autostart /home/pi/.config/lxsession/LXDE-pi
 chown pi:pi /home/pi/.config
 curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/dhcpcd.conf -o /etc/dhcpcd.conf
 curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/dnsmasq.conf -o /etc/dnsmasq.conf
