@@ -3,7 +3,11 @@ if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root"
    exit 1
 fi
+
+
 branch=dev
+
+
 echo "Radio-VNC written by GingerCam https://github.com/GingerCam"
 echo ""
 sleep 1
@@ -19,7 +23,8 @@ apt install -y hostapd dnsmasq gqrx-sdr raspberrypi-ui-mods curl wget realvnc-vn
 
 echo "Config files will be downloaded"
 
-runuser -u pi mkdir -p /home/pi/.config/autostart
+mkdir -p /home/pi/.config/autostart && mkdir -p /home/pi/.config/lxsession/LXDE-pi
+chown pi:pi /home/pi/.config
 curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/dhcpcd.conf -o /etc/dhcpcd.conf
 curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/dnsmasq.conf -o /etc/dnsmasq.conf
 curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/hostapd.conf -o /etc/hostapd/hostapd.conf
@@ -80,7 +85,7 @@ echo ""
 echo ""
 echo "Setting desktop wallpaper"
 wget -O /home/pi/background.png "https://github.com/GingerCam/Radio-VNC/raw/$branch/other-files/background.png"
-runuser -u pi pcmanfm --set-wallpaper /home/pi/background.png
+runuser -u pi "pcmanfm --set-wallpaper /home/pi/background.png"
 echo "Set"
 sleep 1
 echo "autologin-guest=false" >> /etc/lightdm/lightdm.conf
