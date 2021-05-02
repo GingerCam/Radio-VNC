@@ -15,15 +15,15 @@ sleep 10
 echo "Radio-VNC will install hostapd, dnsmasq, GQRX, pixel desktop, vnc-server and all of their dependencies."
 
 apt update && apt upgrade -y
-apt install -y hostapd dnsmasq gqrx-sdr raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet
-
-
+apt install -y hostapd dnsmasq gqrx-sdr raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme
 
 echo "Config files will be downloaded"
 
+runuser -u pi mkdir -p /home/pi/.config/autostart
 curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/main/config/dhcpcd.conf -o /etc/dhcpcd.conf
 curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/main/config/dnsmasq.conf -o /etc/dnsmasq.conf
 curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/main/config/hostapd.conf -o /etc/hostapd/hostapd.conf
+curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/main/config/desktop.conf -o /home/pi/.config/lxsession/LXDE-pi/desktop.conf
 
 echo "Config files have been downloaded"
 sleep 1
@@ -41,6 +41,7 @@ for filename in /var/lib/systemd/rfkill*:wlan ; do
   echo 0 > $filename
 done
 sleep 1
+echo "Set"
 
 echo "Setting up VNC server"
 systemctl enable vncserver-x11-serviced.service
@@ -60,21 +61,31 @@ echo "Setting up hostapd"
 sleep 1
 systemctl unmask hostapd
 systemctl enable hostapd
+echo "Set"
 
 echo "Changing hostname to Radio-VNC"
 sleep 1
 hostnamectl set-hostname 'Radio-VNC'
+echo "Set"
 
 echo "Setting up GQRX to start on boot"
 sleep 1
-sudo -u pi mkdir -p /home/pi/.config/autostart
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/main/other-files/gqrx.desktop -o /home/pi/.config/autostart/gqrx.desktop
+echo "Set"
 
 echo "Network==Radio-VNC | Network-Password==RaspberryRadio | ip address==192.168.4.1 | hostname==Radio-VNC" >> /home/pi/info.txt
 echo "Check /home/pi/info.txt for more infomation"
 sleep 2
 echo ""
 echo ""
+echo "Setting desktop wallpaper"
+wget -O /home/pi/background.png "https://github.com/GingerCam/Radio-VNC/raw/main/other-files/background.png"
+runuser -u pi pcmanfm --set-wallpaper /home/pi/background.png
+echo "Set"
+sleep 1
+echo "autologin-guest=false" >> /etc/lightdm/lightdm.conf
+echo "autologin-user=pi" >> /etc/lightdm/lightdm.conf
+echo "autologin-user-timeout=0" >> /etc/lightdm/lightdm.conf
 
 figlet Radio-VNC is installed
 echo "System will reboot in 5 seconds"
