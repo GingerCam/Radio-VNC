@@ -4,9 +4,26 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-
+USER=${SUDO_USER:-$(who -m | awk '{ print $1 }')}
 branch=dev
+config=/home/$USER/.config
+boot_config=/boot/config.txt
+BLACKLIST=/etc/modprobe.d/raspi-blacklist.conf
 
+is_pi () {
+  ARCH=$(dpkg --print-architecture)
+  if [ "$ARCH" = "armhf" ] || [ "$ARCH" = "arm64" ] ; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+if is_pi ; then
+  CMDLINE=/boot/cmdline.txt
+else
+  CMDLINE=/proc/cmdline
+fi
 
 echo "Radio-VNC written by GingerCam https://github.com/GingerCam"
 echo ""
@@ -28,7 +45,7 @@ chown pi:pi /home/pi/.config
 curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/dhcpcd.conf -o /etc/dhcpcd.conf
 curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/dnsmasq.conf -o /etc/dnsmasq.conf
 curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/hostapd.conf -o /etc/hostapd/hostapd.conf
-curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/desktop.conf -o /home/pi/.config/lxsession/LXDE-pi/desktop.conf
+curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/desktop.conf -o $config/lxsession/LXDE-pi/desktop.conf
 
 echo "Config files have been downloaded"
 sleep 1
@@ -78,14 +95,14 @@ sleep 1
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/gqrx.desktop -o /home/pi/.config/autostart/gqrx.desktop
 echo "Set"
 
-echo "Network==Radio-VNC | Network-Password==RaspberryRadio | ip address==192.168.4.1 | hostname==Radio-VNC" >> /home/pi/info.txt
-echo "Check /home/pi/info.txt for more infomation"
+echo "Network==Radio-VNC | Network-Password==RaspberryRadio | ip address==192.168.4.1 | hostname==Radio-VNC" >> /home/$USER/info.txt
+echo "Check /home/$USER/info.txt for more infomation"
 sleep 2
 echo ""
 echo ""
 echo "Setting desktop wallpaper"
-wget -O /home/pi/background.png "https://github.com/GingerCam/Radio-VNC/raw/$branch/other-files/background.png"
-runuser -u pi "pcmanfm --set-wallpaper /home/pi/background.png"
+sudo -u "wget -O /home/pi/background.png "https://github.com/GingerCam/Radio-VNC/raw/$branch/other-files/background.png""
+sudo -u pi "pcmanfm --set-wallpaper /home/$USER/background.png"
 echo "Set"
 sleep 1
 echo "autologin-guest=false" >> /etc/lightdm/lightdm.conf
