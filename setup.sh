@@ -7,8 +7,6 @@ fi
 USER=${SUDO_USER:-$(who -m | awk '{ print $1 }')}
 branch=dev
 config=/home/$USER/.config
-boot_config=/boot/config.txt
-BLACKLIST=/etc/modprobe.d/raspi-blacklist.conf
 
 is_pi () {
   ARCH=$(dpkg --print-architecture)
@@ -40,8 +38,8 @@ apt install -y hostapd dnsmasq gqrx-sdr raspberrypi-ui-mods curl wget realvnc-vn
 
 echo "Config files will be downloaded"
 
-mkdir -p /home/pi/.config/autostart /home/pi/.config/lxsession/LXDE-pi
-chown pi:pi /home/pi/.config
+mkdir -p /home/$USER/.config/autostart /home/$USER/.config/lxsession/LXDE-pi /home/$USER/.config/pcmanfm/LXDE-pi
+chown $USER:$USER /home/$USER/.config
 curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/dhcpcd.conf -o /etc/dhcpcd.conf
 curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/dnsmasq.conf -o /etc/dnsmasq.conf
 curl  https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/hostapd.conf -o /etc/hostapd/hostapd.conf
@@ -92,7 +90,7 @@ echo "Set"
 
 echo "Setting up GQRX to start on boot"
 sleep 1
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/gqrx.desktop -o /home/pi/.config/autostart/gqrx.desktop
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/gqrx.desktop -o $config/autostart/gqrx.desktop
 echo "Set"
 
 echo "Network==Radio-VNC | Network-Password==RaspberryRadio | ip address==192.168.4.1 | hostname==Radio-VNC" >> /home/$USER/info.txt
@@ -101,12 +99,12 @@ sleep 2
 echo ""
 echo ""
 echo "Setting desktop wallpaper"
-sudo -u "wget -O /home/pi/background.png "https://github.com/GingerCam/Radio-VNC/raw/$branch/other-files/background.png""
-sudo -u pi "pcmanfm --set-wallpaper /home/$USER/background.png"
+sudo -u $USER "wget -O /home/$USER/background.png "https://github.com/GingerCam/Radio-VNC/raw/$branch/other-files/background.png""
+sudo -u $USER "curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/desktop-items-0.conf -o $config/pcmanfm/LXDE-pi/desktop-items-0.conf"
 echo "Set"
 sleep 1
 echo "autologin-guest=false" >> /etc/lightdm/lightdm.conf
-echo "autologin-user=pi" >> /etc/lightdm/lightdm.conf
+echo "autologin-user=$USER" >> /etc/lightdm/lightdm.conf
 echo "autologin-user-timeout=0" >> /etc/lightdm/lightdm.conf
 
 figlet Radio-VNC is installed
