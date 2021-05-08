@@ -1,7 +1,13 @@
 #!/bin/bash
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root"
+   whiptail --msgbox "This script must be run as root" 8 78
    exit 1
+fi
+
+if (whiptail --title "Radio-VNC installation script" --yesno "Would you like to install Radio-VNC?" 8 78); then
+    return
+else
+    exit 1
 fi
 
 USER=${SUDO_USER:-$(who -m | awk '{ print $1 }')}
@@ -25,13 +31,7 @@ else
   CMDLINE=/proc/cmdline
 fi
 
-echo "Radio-VNC written by GingerCam https://github.com/GingerCam"
-echo ""
-sleep 1
-echo "You are about to install Radio-VNC"
-echo "Do you want to continue?"
-echo "Press CTRL + C in the next 10 seconds to cancel"
-sleep 10
+whiptail --msgbox "Radio-VNC written by GingerCam https://github.com/GingerCam" 8 78
 
 echo "Radio-VNC will install hostapd, dnsmasq, GQRX, pixel desktop, vnc-server and all of their dependencies."
 
@@ -71,6 +71,7 @@ systemctl start vncserver-x11-serviced.service
 echo ""
 sleep 1
 echo "VNC server is configured"
+echo ""
 
 echo "Setting up ssh server"
 ssh-keygen -A
@@ -78,11 +79,15 @@ update-rc.d ssh enable
 invoke-rc.d ssh start
 echo ""
 echo "ssh server is configured"
+echo ""
 
 echo "Setting up hostapd"
+systemctl unmask hostapd
+systemctl enable hostapd
 sleep 1
 echo "Set"
-
+echo "
+"
 echo "Setting up GQRX to start on boot"
 sleep 1
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/gqrx.desktop -o $config/autostart/gqrx.desktop
@@ -107,7 +112,7 @@ echo $NEW_HOSTNAME > /etc/hostname
 sed -i "s/127.0.1.1.*$CURRENT_HOSTNAME/127.0.1.1\t$NEW_HOSTNAME/g" /etc/hosts
 echo "Set"
 
-figlet Radio-VNC is installed
-echo "System will reboot in 5 seconds"
+whiptail --msgbox "Radio-VNC is installed" 8 78
+whiptail --msgbox "System will reboot in 5 seconds" 8 78
 sleep 5
 reboot
