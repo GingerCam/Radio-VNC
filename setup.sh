@@ -7,6 +7,8 @@ fi
 USER=${SUDO_USER:-$(who -m | awk '{ print $1 }')}
 branch=dev
 config=/home/$USER/.config
+CURRENT_HOSTNAME=`cat /etc/hostname | tr -d " \t\n\r"`
+NEW_HOSTNAME=Radio-VNC
 
 is_pi () {
   ARCH=$(dpkg --print-architecture)
@@ -79,13 +81,6 @@ echo "ssh server is configured"
 
 echo "Setting up hostapd"
 sleep 1
-systemctl unmask hostapd
-systemctl enable hostapd
-echo "Set"
-
-echo "Changing hostname to Radio-VNC"
-sleep 1
-hostnamectl set-hostname 'Radio-VNC'
 echo "Set"
 
 echo "Setting up GQRX to start on boot"
@@ -99,13 +94,18 @@ sleep 2
 echo ""
 echo ""
 echo "Setting desktop wallpaper"
-sudo -u $USER "wget -O /home/$USER/background.png "https://github.com/GingerCam/Radio-VNC/raw/$branch/other-files/background.png""
-sudo -u $USER "curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/desktop-items-0.conf -o $config/pcmanfm/LXDE-pi/desktop-items-0.conf"
+wget -O /home/$USER/background.png "https://github.com/GingerCam/Radio-VNC/raw/$branch/other-files/background.png"
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/desktop-items-0.conf -o $config/pcmanfm/LXDE-pi/desktop-items-0.conf
+chown pi:pi $config/pcmanfm/LXDE-pi/desktop-items-0.conf
 echo "Set"
 sleep 1
-echo "autologin-guest=false" >> /etc/lightdm/lightdm.conf
-echo "autologin-user=$USER" >> /etc/lightdm/lightdm.conf
-echo "autologin-user-timeout=0" >> /etc/lightdm/lightdm.conf
+echo ""
+sed /etc/lightdm/lightdm.conf -i -e "s/^\(#\|\)autologin-user=.*/autologin-user=$USER/"
+echo "Changing hostname to Radio-VNC"
+sleep 1
+echo $NEW_HOSTNAME > /etc/hostname
+sed -i "s/127.0.1.1.*$CURRENT_HOSTNAME/127.0.1.1\t$NEW_HOSTNAME/g" /etc/hosts
+echo "Set"
 
 figlet Radio-VNC is installed
 echo "System will reboot in 5 seconds"
