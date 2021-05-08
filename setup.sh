@@ -33,38 +33,11 @@ fi
 
 whiptail --msgbox "Radio-VNC written by GingerCam https://github.com/GingerCam" 8 78
 
-{
-    sleep 0.5
-    echo -e "XXX\n0\nInstalling hostapd and dnsmasq... \nXXX"
-    apt update && apt upgrade -y
-    apt install hostapd dnsmasq
-    sleep 2
-    echo -e "XXX\n25\nInstalling hostapd and dnsmasq... Done.\nXXX"
-    sleep 0.5
-
-    echo -e "XXX\n25\nInstalling GQRX and PIXEL desktop... \nXXX"
-    apt install gqrx-sdr raspberrypi-ui-mods curl wget figlet arc-theme lxappearance
-    sleep 2
-    echo -e "XXX\n50\nInstalling GQRX and PIXEL desktop... Done.\nXXX"
-    sleep 0.5
-
-    echo -e "XXX\n50\nInstalling other dependencies... \nXXX"
-    apt install curl wget figlet arc-theme lxappearance
-    sleep 2
-    echo -e "XXX\n75\nInstalling other dependencies... Done.\nXXX"
-    sleep 0.5
-
-    echo -e "XXX\n75\nInstalling VNC server... \nXXX"
-    apt install realvnc-vnc-server realvnc-vnc-viewer
-    sleep 2
-    echo -e "XXX\n100\nInstalling VNC server... Done.\nXXX"
-    sleep 1
-} |whiptail --title "Yum Removal" --gauge "Please wait while installing" 6 60 0
 
 echo "Radio-VNC will install hostapd, dnsmasq, GQRX, pixel desktop, vnc-server and all of their dependencies."
 
-#apt update && apt upgrade -y
-#apt install -y hostapd dnsmasq gqrx-sdr raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme
+apt update && apt upgrade -y
+apt install -y hostapd dnsmasq gqrx-sdr raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme
 
 echo "Config files will be downloaded"
 
