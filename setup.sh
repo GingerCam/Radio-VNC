@@ -113,6 +113,15 @@ echo $NEW_HOSTNAME > /etc/hostname
 sed -i "s/127.0.1.1.*$CURRENT_HOSTNAME/127.0.1.1\t$NEW_HOSTNAME/g" /etc/hosts
 echo "Set"
 
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/update-script.sh -o /usr/bin/update-script.sh
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/setup.sh -o /usr/bin/script.sh
+
+crontab -l > mycron
+echo "@reboot /usr/bin/update.sh" >> mycron
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/update.sh -o /usr/bin/update.sh
+crontab mycron
+rm mycron
+
 whiptail --msgbox "Radio-VNC is installed" 8 78
 whiptail --msgbox "System will reboot in 5 seconds" 8 78
 sleep 5
