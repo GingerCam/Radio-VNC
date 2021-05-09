@@ -11,7 +11,7 @@ else
 fi
 
 USER=${SUDO_USER:-$(who -m | awk '{ print $1 }')}
-branch=dev
+branch=main
 config=/home/$USER/.config
 CURRENT_HOSTNAME=`cat /etc/hostname | tr -d " \t\n\r"`
 NEW_HOSTNAME=Radio-VNC
