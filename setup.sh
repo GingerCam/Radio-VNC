@@ -117,9 +117,15 @@ curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/u
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/setup.sh -o /usr/bin/script.sh
 
 crontab -l > mycron
-echo "@reboot /usr/bin/update.sh" >> mycron
+
+if grep -q "@reboot /usr/bin/update.sh" mycron ; then
+  return
+else
+  echo "@reboot /usr/bin/update.sh" >> mycron
+  crontab mycron
+fi
+
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/update.sh -o /usr/bin/update.sh
-crontab mycron
 rm mycron
 
 whiptail --msgbox "Radio-VNC is installed" 8 78
