@@ -18,4 +18,4 @@ else
   return
 fi
 
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/update.desktop -o $config/autostart/update.sh
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/update.desktop -o $config/autostart/update.desktop
