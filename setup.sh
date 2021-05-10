@@ -15,6 +15,7 @@ branch=dev
 config=/home/$USER/.config
 CURRENT_HOSTNAME=`cat /etc/hostname | tr -d " \t\n\r"`
 NEW_HOSTNAME=Radio-VNC
+wireless_interface=`iw dev | awk '$1=="Interface"{print $2}'`
 
 is_pi () {
   ARCH=$(dpkg --print-architecture)
@@ -37,7 +38,7 @@ whiptail --msgbox "Radio-VNC written by GingerCam https://github.com/GingerCam" 
 echo "Radio-VNC will install hostapd, dnsmasq, GQRX, pixel desktop, vnc-server and all of their dependencies."
 
 apt update && apt upgrade -y
-apt install -y hostapd dnsmasq gqrx-sdr raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme
+apt install -y hostapd dnsmasq gqrx-sdr raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme terminator
 
 echo "Config files will be downloaded"
 
@@ -52,13 +53,24 @@ echo "Config files have been downloaded"
 sleep 1
 
 echo "Setting up applications"
-echo ""DAEMON_CONF="/etc/hostapd/hostapd.conf" >> "/etc/default/hostapd"
-echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+
+if grep -q "DAEMON_CONF="/etc/hostapd/hostapd.conf"" /etc/default/hostapd; then
+  return
+else
+  echo ""DAEMON_CONF="/etc/hostapd/hostapd.conf" >> "/etc/default/hostapd"
+fi
+
+if grep -q "net.ipv4.ip_forward=1" /etc/sysctl.conf; then
+  return
+else
+  echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+fi
+
 echo ""
 
 echo "Setting up wireless location to GB"
-wpa_cli -i wlan0 set country GB
-wpa_cli -i wlan0 save_config > /dev/null 2>&1
+wpa_cli -i $wireless_interface set country GB
+wpa_cli -i $wireless_interface save_config > /dev/null 2>&1
 rfkill unblock wifi
 for filename in /var/lib/systemd/rfkill*:wlan ; do
   echo 0 > $filename
@@ -106,11 +118,23 @@ chown pi:pi $config/pcmanfm/LXDE-pi/desktop-items-0.conf
 echo "Set"
 sleep 1
 echo ""
-sed /etc/lightdm/lightdm.conf -i -e "s/^\(#\|\)autologin-user=.*/autologin-user=$USER/"
+
+if grep -q "^autologin-user=" /etc/lightdm/lightdm.conf ; then
+  return
+else
+  sed /etc/lightdm/lightdm.conf -i -e "s/^\(#\|\)autologin-user=.*/autologin-user=$USER/"
+fi
+
 echo "Changing hostname to Radio-VNC"
 sleep 1
-echo $NEW_HOSTNAME > /etc/hostname
-sed -i "s/127.0.1.1.*$CURRENT_HOSTNAME/127.0.1.1\t$NEW_HOSTNAME/g" /etc/hosts
+
+if grep -q "127.0.1.1 Radio-VNC" /etc/hosts; then
+  return
+else
+  echo $NEW_HOSTNAME > /etc/hostname
+  sed -i "s/127.0.1.1.*$CURRENT_HOSTNAME/127.0.1.1\t$NEW_HOSTNAME/g" /etc/hosts
+fi
+
 echo "Set"
 
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/update-script.sh -o /usr/bin/update-script.sh
@@ -127,6 +151,7 @@ fi
 
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/update.sh -o /usr/bin/update.sh
 rm mycron
+chmod +x /usr/bin/update.sh /usr/bin/update-script.sh /usr/bin/script.sh
 
 whiptail --msgbox "Radio-VNC is installed" 8 78
 whiptail --msgbox "System will reboot in 5 seconds" 8 78

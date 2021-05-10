@@ -1,5 +1,5 @@
 [Desktop Entry]
 Type=Application
 Name=update
-Exec="wmctrl -r ':ACTIVE:' -b toggle,fullscreen && sudo bash /usr/bin/update-script.sh"
+Exec=terminator -f -e "sudo bash /usr/bin/update-script.sh"
 Terminal=true
