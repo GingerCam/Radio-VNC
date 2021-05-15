@@ -15,5 +15,15 @@ else
   exit 1
 fi
 
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/setup.sh | sudo bash
+psw=$(whiptail --title "Test Password Box" --passwordbox "Enter your password and choose Ok to continue." 10 60 3>&1 1>&2 2>&3)
+    exitstatus=$?
+  #statements
+    if [ $exitstatus = 0 ]; then
+        sudo -S <<< $psw curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/setup.sh | sudo bash
+    else
+        #Password If cancel
+        whiptail --title "Cancel" --msgbox "Operation Cancel" 10 60
+    fi
+
+
 rm /home/$USER/.config/autostart/update.desktop
