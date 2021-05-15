@@ -26,7 +26,7 @@ else
   CMDLINE=/proc/cmdline
 fi
 
-if (whiptail --title "Radio-VNC uninstall script" --yesno "Are you sure you want to uninstall Radio-VNC?\nWARNING:This will uninstall Radio-VNC and all of it's dependencies 8 78"); then
+if (whiptail --title "Radio-VNC uninstall script" --yesno "Are you sure you want to uninstall Radio-VNC?\nWARNING:This will uninstall Radio-VNC and all of it's dependencies" 8 78); then
   return
 else
   exit
@@ -62,3 +62,8 @@ if grep -q "^net.ipv4.ip_forward=1" /etc/sysctl.conf; then
 else
   return
 fi
+whiptail --msgbox "Radio-VNC has been uninstalled" 20 70 0
+whiptail --msgbox "Goodbye, I hope you have enjoyed Radio-VNC" 20 70 0
+whiptail --msgbox "Have Fun On Your New Raspberry Pi Project" 20 70 0
+whiptail --msgbox "Sincerely,\nThe Radio-VNC Devs" 20 70 0
+reboot
