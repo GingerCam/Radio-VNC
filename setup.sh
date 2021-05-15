@@ -61,10 +61,10 @@ else
   echo ""DAEMON_CONF="/etc/hostapd/hostapd.conf" >> "/etc/default/hostapd"
 fi
 
-if grep -q "net.ipv4.ip_forward=1" /etc/sysctl.conf; then
+if grep -q "^net.ipv4.ip_forward=1" /etc/sysctl.conf; then
   return
 else
-  echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+  sed -i "s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/" /etc/sysctl.conf
 fi
 
 echo ""
