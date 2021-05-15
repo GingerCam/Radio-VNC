@@ -10,7 +10,8 @@ else
     exit 1
 fi
 
-USER=${SUDO_USER:-$(who -m | awk '{ print $1 }')}
+#USER=${SUDO_USER:-$(who -m | awk '{ print $1 }')}
+USER=pi
 branch=dev
 config=/home/$USER/.config
 CURRENT_HOSTNAME=`cat /etc/hostname | tr -d " \t\n\r"`

@@ -7,7 +7,8 @@ else
 fi
 
 branch=dev
-USER=${SUDO_USER:-$(who -m | awk '{ print $1 }')}
+USER=pi
+#USER=${SUDO_USER:-$(who -m | awk '{ print $1 }')}
 config=/home/$USER/.config
 
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/setup.sh >> /tmp/setup.sh
