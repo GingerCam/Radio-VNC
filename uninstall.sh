@@ -39,7 +39,7 @@ rm -rf $config /home/$USER/background.png /usr/bin/update.sh /usr/bin/update-scr
 
 if grep -q "127.0.1.1 Radio-VNC" /etc/hosts; then
   echo $NEW_HOSTNAME > /etc/hostname
-  sed -i "s/127.0.1.1.*$NEW_HOSTNAME/127.0.1.1\t$CURRENT_HOSTNAME/g" /etc/hosts
+  sed -i "s/127.0.1.1.*$CURRENT_HOSTNAME/127.0.1.1\t$NEW_HOSTNAME/g" /etc/hosts
 else
   return
 fi
