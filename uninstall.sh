@@ -26,10 +26,11 @@ else
   CMDLINE=/proc/cmdline
 fi
 
-if (whiptail --title "Radio-VNC uninstall script" --yesno "Are you sure you want to uninstall Radio-VNC?\nWARNING:This will uninstall Radio-VNC and all of it's dependencies"); then
+if (whiptail --title "Radio-VNC uninstall script" --yesno "Are you sure you want to uninstall Radio-VNC?\nWARNING:This will uninstall Radio-VNC and all of it's dependencies 8 78"); then
   return
 else
   exit
+fi
 
 apt purge -y hostapd dnsmasq gqrx-sdr raspberrypi-ui-mods realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme terminator
 apt autoremove
