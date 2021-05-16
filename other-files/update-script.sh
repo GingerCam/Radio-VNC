@@ -20,7 +20,7 @@ psw=$(whiptail --title "Test Password Box" --passwordbox "Enter your password an
     exitstatus=$?
   #statements
     if [ $exitstatus = 0 ]; then
-        sudo -S <<< $psw curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/setup.sh | sudo bash
+        sudo -S <<< $psw runuser -u $USER -- curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/setup.sh | sudo bash
     else
         #Password If cancel
         whiptail --title "Cancel" --msgbox "Operation Cancel" 10 60

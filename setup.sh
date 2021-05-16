@@ -140,6 +140,8 @@ echo "Set"
 
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/update-script.sh -o /usr/bin/update-script.sh
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/setup.sh -o /usr/bin/script.sh
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/uninstall.sh -o /usr/bin/uninstall.sh
+
 
 crontab -l > mycron
 
@@ -152,7 +154,7 @@ fi
 
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/update.sh -o /usr/bin/update.sh
 rm mycron
-chmod +x /usr/bin/update.sh /usr/bin/update-script.sh /usr/bin/script.sh
+chmod +x /usr/bin/update.sh /usr/bin/update-script.sh /usr/bin/script.sh /usr/bin/uninstall.sh
 
 whiptail --msgbox "Radio-VNC is installed" 8 78
 whiptail --msgbox "System will reboot in 5 seconds" 8 78
