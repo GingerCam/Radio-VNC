@@ -26,8 +26,14 @@ This project is being actively worked on by myself (GingerCam) and any feedback 
 
 It is recommended to install to a new SD card or USB drive so you don't loose any data.
 
-# To do list
+# Update Radio-vnc
 
-Add an uninstall script
+To update Radio-VNC a script auto checks for updates on boot through crontab.
+The scripts are stored at /usr/bin/update.sh /usr/bin/update-script.sh and the .desktop file is stored on github in /other-files/
 
-Maybe make it an application rather than consuming a whole SD card for this project
+# Uninstalling Radio-vnc
+
+To uninstall Radio-VNC you can execute the command:
+"sudo bash /usr/bin/uninstall.sh"
+
+This will uninstall Radio-VNC and all of its dependencies

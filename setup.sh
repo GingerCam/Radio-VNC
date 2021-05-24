@@ -17,29 +17,54 @@ config=/home/$USER/.config
 CURRENT_HOSTNAME=`cat /etc/hostname | tr -d " \t\n\r"`
 NEW_HOSTNAME=Radio-VNC
 wireless_interface=`iw dev | awk '$1=="Interface"{print $2}'`
+webroot="/var/www/html"
+RADIO_VNC_LOCAL_REPO="/etc/.radiovnc"
 
-is_pi () {
-  ARCH=$(dpkg --print-architecture)
-  if [ "$ARCH" = "armhf" ] || [ "$ARCH" = "arm64" ] ; then
-    return 0
-  else
-    return 1
-  fi
-}
-
-if is_pi ; then
-  CMDLINE=/boot/cmdline.txt
+if [ -t 0 ] ; then
+  screen_size=$(stty size)
 else
-  CMDLINE=/proc/cmdline
+  screen_size="24 80"
 fi
 
-whiptail --msgbox "Radio-VNC written by GingerCam https://github.com/GingerCam" 8 78
+printf -v rows '%d' "${screen_size%% *}"
+printf -v columns '%d' "${screen_size##* }"
 
+# Divide by two so the dialogs take up half of the screen, which looks nice.
+r=$(( rows / 2 ))
+c=$(( columns / 2 ))
+# Unless the screen is tiny
+r=$(( r < 20 ? 20 : r ))
+c=$(( c < 70 ? 70 : c ))
+
+is_command() {
+    # Checks to see if the given command (passed as a string argument) exists on the system.
+    # The function returns 0 (success) if the command exists, and 1 if it doesn't.
+    local check_command="$1"
+
+    command -v "${check_command}" >/dev/null 2>&1
+}
+
+whiptail --msgbox "Radio-VNC written by GingerCam https://github.com/GingerCam" "${r}" "${c}"
+
+optional=$(whiptail --title "Test" --checklist Choose: "${r}" "${c}" \
+  "gqrx-sdr" "" on \
+  "rtl-sdr" "" off \
+  "cutesdr" "" off \
+  "qusik" "" off \
+  "lysdr" "" off \
+  3>&1 1>&2 2>&3)
+
+  if (whiptail --title "Argon One case" --defaultno --yesno "If you have an Argon One case you might want to install the Argon One script.\nWould you like to install it?" "${r}" "${c}"); then
+    Argon=TRUE
+  else
+    ARGON=FALSE
+  fi
 
 echo "Radio-VNC will install hostapd, dnsmasq, GQRX, pixel desktop, vnc-server and all of their dependencies."
 
 apt update && apt upgrade -y
-apt install -y hostapd dnsmasq gqrx-sdr raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme terminator
+apt install -y hostapd dnsmasq raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme terminator
+apt install $optional
 
 echo "Config files will be downloaded"
 
@@ -138,7 +163,7 @@ fi
 
 echo "Set"
 
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/update-script.sh -o /usr/bin/update-script.sh
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/scripts/update-script.sh -o /usr/bin/update-script.sh
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/setup.sh -o /usr/bin/script.sh
 
 crontab -l > mycron
@@ -154,7 +179,14 @@ curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/update.sh -o 
 rm mycron
 chmod +x /usr/bin/update.sh /usr/bin/update-script.sh /usr/bin/script.sh
 
-whiptail --msgbox "Radio-VNC is installed" 8 78
-whiptail --msgbox "System will reboot in 5 seconds" 8 78
+if [ "$ARGON"=TRUE ]; then
+  curl https://download.argon40.com/argon1.sh | bash
+else
+  return
+fi
+git clone https://github.com/GingerCam/Radio-VNC.git /opt/Radio-VNC
+
+whiptail --msgbox "Radio-VNC is installed" "${r}" "${c}"
+whiptail --msgbox "System will reboot in 5 seconds" "${r}" "${c}"
 sleep 5
 reboot
