@@ -1,0 +1,124 @@
+#!/bin/bash
+
+if [[ $EUID -ne 0 ]]; then
+   whiptail --msgbox "This script must be run as root" 8 78
+   exit 1
+fi
+
+USER=pi
+branch=dev
+config=/home/$USER/.config
+wireless_config=/etc/hostapd/hostapd.conf
+#wireless_interface=`iw dev | awk '$1=="Interface"{print $2}'`
+availableInterfaces=`ip --oneline link show up | grep -v "lo" | grep -v "eth0" | awk '{print $2}' | cut -d':' -f1 | cut -d'@' -f1`
+current_SSID=`cat $wireless_config | grep "^ssid="`
+current_interface=`cat $wireless_config | grep "^interface="`
+current_channel=`cat $wireless_config | grep "^channel="`
+current_password=`cat $wireless_config | grep "^wpa_passphrase="`
+
+if [ -t 0 ] ; then
+  screen_size=$(stty size)
+else
+  screen_size="24 80"
+fi
+
+printf -v rows '%d' "${screen_size%% *}"
+printf -v columns '%d' "${screen_size##* }"
+
+# Divide by two so the dialogs take up half of the screen, which looks nice.
+r=$(( rows / 2 ))
+c=$(( columns / 2 ))
+#r=20
+#c=70
+
+
+SSID=`whiptail --title "Radio-VNC Wi-FI config" --passwordbox "Enter SSID:" "${r}" "${c}" 3>&1 1>&2 2>&3`
+
+channel_choice(){
+    Channel=`whiptail --title "Radio-VNC Wi-FI config" --passwordbox "Enter AP Channel:" "${r}" "${c}" 3>&1 1>&2 2>&3`
+}
+channel_choice
+
+if [ $Channel != 1...14 ]; then
+  whiptail --title "Radio-VNC Wi-Fi config" --msgbox "Channel value must be a number between 1 and 14" "${r}" "${c}"
+  channel_choice
+fi
+
+chooseInterface() {
+    # Turn the available interfaces into an array so it can be used with a whiptail dialog
+    local interfacesArray=()
+    # Number of available interfaces
+    local interfaceCount
+    # Whiptail variable storage
+    local chooseInterfaceCmd
+    # Temporary Whiptail options storage
+    local chooseInterfaceOptions
+    # Loop sentinel variable
+    local firstLoop=1
+
+    # Find out how many interfaces are available to choose from
+    interfaceCount=$(wc -l <<< "${availableInterfaces}")
+
+    # If there is one interface,
+    if [[ "${interfaceCount}" -eq 1 ]]; then
+        # Set it as the interface to use since there is no other option
+        Radio_VNC_INTERFACE="${availableInterfaces}"
+    # Otherwise,
+    else
+        # While reading through the available interfaces
+        while read -r line; do
+            # Use a variable to set the option as OFF to begin with
+            mode="OFF"
+            # If it's the first loop,
+            if [[ "${firstLoop}" -eq 1 ]]; then
+                # set this as the interface to use (ON)
+                firstLoop=0
+                mode="ON"
+            fi
+            # Put all these interfaces into an array
+            interfacesArray+=("${line}" "available" "${mode}")
+        # Feed the available interfaces into this while loop
+        done <<< "${availableInterfaces}"
+        # The whiptail command that will be run, stored in a variable
+        chooseInterfaceCmd=(whiptail --separate-output --radiolist "Choose An Interface (press space to toggle selection)" "${r}" "${c}" "${interfaceCount}")
+        # Now run the command using the interfaces saved into the array
+        chooseInterfaceOptions=$("${chooseInterfaceCmd[@]}" "${interfacesArray[@]}" 2>&1 >/dev/tty) || \
+        # If the user chooses Cancel, exit
+        { printf "  %bCancel was selected, exiting config%b\\n" "${COL_LIGHT_RED}" "${COL_NC}"; exit 1; }
+        # For each interface
+        for desiredInterface in ${chooseInterfaceOptions}; do
+            # Set the one the user selected as the interface to use
+            Radio_VNC_INTERFACE=${desiredInterface}
+            # and show this information to the user
+            #printf "  %b Using interface: %s\\n" "${INFO}" "${Radio_VNC_INTERFACE}"
+        done
+    fi
+}
+
+chooseInterface
+
+if (whiptail --title "Radio-VNC Wi-Fi Config" --defaultno --yesno "Would you like to make the AP Hidden?" "${r}" "${c}"); then
+  Hidden=TRUE
+else
+  Hiddden=False
+fi
+
+AP_Password(){
+   Password=$(whiptail --title "Radio-VNC Wi-FI config" --passwordbox "Enter AP Password:" "${r}" "${c}" 3>&1 1>&2 2>&3)
+   Password_check=$(whiptail --title "Radio-VNC Wi-FI config" --passwordbox "Re-enter AP Password:" "${r}" "${c}" 3>&1 1>&2 2>&3)
+}
+
+AP_Password
+
+if [ "$Password" != "$Password_check" ]; then
+  whiptail --title "Radio-VNC Wi-Fi Config" --msgbox "Passwords do not match, please try again" "${r}" "${c}"
+  AP_Password
+fi
+
+sed -i "s/$current_interface/interface=$Radio_VNC_INTERFACE/" $wireless_config
+sed -i "s/$current_SSID/ssid=$SSID/" $wireless_config
+sed -i "s/$current_channel/channel="$channel"/" $wireless_config
+sed -i "s/$current_password/wpa_passphrase="$Password"/" $wireless_config
+
+systemctl restart hostapd
+whiptail --title "Radio-VNC Wi-Fi config" --msgbox "Wi-fi config set" "${r}" "${c}"

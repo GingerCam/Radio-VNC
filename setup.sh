@@ -10,34 +10,61 @@ else
     exit 1
 fi
 
-USER=${SUDO_USER:-$(who -m | awk '{ print $1 }')}
-branch=main
+#USER=${SUDO_USER:-$(who -m | awk '{ print $1 }')}
+USER=pi
+branch=dev
 config=/home/$USER/.config
 CURRENT_HOSTNAME=`cat /etc/hostname | tr -d " \t\n\r"`
 NEW_HOSTNAME=Radio-VNC
+wireless_interface=`iw dev | awk '$1=="Interface"{print $2}'`
+webroot="/var/www/html"
+RADIO_VNC_LOCAL_REPO="/etc/.radiovnc"
 
-is_pi () {
-  ARCH=$(dpkg --print-architecture)
-  if [ "$ARCH" = "armhf" ] || [ "$ARCH" = "arm64" ] ; then
-    return 0
-  else
-    return 1
-  fi
-}
-
-if is_pi ; then
-  CMDLINE=/boot/cmdline.txt
+if [ -t 0 ] ; then
+  screen_size=$(stty size)
 else
-  CMDLINE=/proc/cmdline
+  screen_size="24 80"
 fi
 
-whiptail --msgbox "Radio-VNC written by GingerCam https://github.com/GingerCam" 8 78
+printf -v rows '%d' "${screen_size%% *}"
+printf -v columns '%d' "${screen_size##* }"
 
+# Divide by two so the dialogs take up half of the screen, which looks nice.
+r=$(( rows / 2 ))
+c=$(( columns / 2 ))
+# Unless the screen is tiny
+r=$(( r < 20 ? 20 : r ))
+c=$(( c < 70 ? 70 : c ))
+
+is_command() {
+    # Checks to see if the given command (passed as a string argument) exists on the system.
+    # The function returns 0 (success) if the command exists, and 1 if it doesn't.
+    local check_command="$1"
+
+    command -v "${check_command}" >/dev/null 2>&1
+}
+
+whiptail --msgbox "Radio-VNC written by GingerCam https://github.com/GingerCam" "${r}" "${c}"
+
+optional=$(whiptail --title "Test" --checklist Choose: "${r}" "${c}" \
+  "gqrx-sdr" "" on \
+  "rtl-sdr" "" off \
+  "cutesdr" "" off \
+  "qusik" "" off \
+  "lysdr" "" off \
+  3>&1 1>&2 2>&3)
+
+  if (whiptail --title "Argon One case" --defaultno --yesno "If you have an Argon One case you might want to install the Argon One script.\nWould you like to install it?" "${r}" "${c}"); then
+    Argon=TRUE
+  else
+    ARGON=FALSE
+  fi
 
 echo "Radio-VNC will install hostapd, dnsmasq, GQRX, pixel desktop, vnc-server and all of their dependencies."
 
 apt update && apt upgrade -y
-apt install -y hostapd dnsmasq gqrx-sdr raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme
+apt install -y hostapd dnsmasq raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme terminator
+apt install $optional
 
 echo "Config files will be downloaded"
 
@@ -52,13 +79,24 @@ echo "Config files have been downloaded"
 sleep 1
 
 echo "Setting up applications"
-echo ""DAEMON_CONF="/etc/hostapd/hostapd.conf" >> "/etc/default/hostapd"
-echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+
+if grep -q "DAEMON_CONF="/etc/hostapd/hostapd.conf"" /etc/default/hostapd; then
+  return
+else
+  echo ""DAEMON_CONF="/etc/hostapd/hostapd.conf" >> "/etc/default/hostapd"
+fi
+
+if grep -q "^net.ipv4.ip_forward=1" /etc/sysctl.conf; then
+  return
+else
+  sed -i "s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/" /etc/sysctl.conf
+fi
+
 echo ""
 
 echo "Setting up wireless location to GB"
-wpa_cli -i wlan0 set country GB
-wpa_cli -i wlan0 save_config > /dev/null 2>&1
+wpa_cli -i $wireless_interface set country GB
+wpa_cli -i $wireless_interface save_config > /dev/null 2>&1
 rfkill unblock wifi
 for filename in /var/lib/systemd/rfkill*:wlan ; do
   echo 0 > $filename
@@ -87,11 +125,11 @@ systemctl unmask hostapd
 systemctl enable hostapd
 sleep 1
 echo "Set"
-echo "
-"
-echo "Setting up GQRX to start on boot"
+echo ""
+
+echo "Setting up Software Selector to start on boot"
 sleep 1
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/gqrx.desktop -o $config/autostart/gqrx.desktop
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/software.desktop -o $config/autostart/software.desktop
 echo "Set"
 
 echo "Network==Radio-VNC | Network-Password==RaspberryRadio | ip address==192.168.4.1 | hostname==Radio-VNC" >> /home/$USER/info.txt
@@ -106,14 +144,51 @@ chown pi:pi $config/pcmanfm/LXDE-pi/desktop-items-0.conf
 echo "Set"
 sleep 1
 echo ""
-sed /etc/lightdm/lightdm.conf -i -e "s/^\(#\|\)autologin-user=.*/autologin-user=$USER/"
+
+if grep -q "^autologin-user=" /etc/lightdm/lightdm.conf ; then
+  return
+else
+  sed /etc/lightdm/lightdm.conf -i -e "s/^\(#\|\)autologin-user=.*/autologin-user=$USER/"
+fi
+
 echo "Changing hostname to Radio-VNC"
 sleep 1
-echo $NEW_HOSTNAME > /etc/hostname
-sed -i "s/127.0.1.1.*$CURRENT_HOSTNAME/127.0.1.1\t$NEW_HOSTNAME/g" /etc/hosts
+
+if grep -q "127.0.1.1 Radio-VNC" /etc/hosts; then
+  return
+else
+  echo $NEW_HOSTNAME > /etc/hostname
+  sed -i "s/127.0.1.1.*$CURRENT_HOSTNAME/127.0.1.1\t$NEW_HOSTNAME/g" /etc/hosts
+fi
+
 echo "Set"
 
-whiptail --msgbox "Radio-VNC is installed" 8 78
-whiptail --msgbox "System will reboot in 5 seconds" 8 78
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/scripts/update-script.sh -o /usr/bin/update-script.sh
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/setup.sh -o /usr/bin/script.sh
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/uninstall.sh -o /usr/bin/uninstall.sh
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/software.sh -o /usr/bin/software.sh
+
+crontab -l > mycron
+
+if grep -q "@reboot /usr/bin/update.sh" mycron ; then
+  return
+else
+  echo "@reboot /usr/bin/update.sh" >> mycron
+  crontab mycron
+fi
+
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/update.sh -o /usr/bin/update.sh
+rm mycron
+chmod +x /usr/bin/update.sh /usr/bin/update-script.sh /usr/bin/script.sh /usr/bin/uninstall.sh /usr/bin/software.sh
+
+if [ "$ARGON"=TRUE ]; then
+  curl https://download.argon40.com/argon1.sh | bash
+else
+  return
+fi
+git clone https://github.com/GingerCam/Radio-VNC.git /opt/Radio-VNC
+
+whiptail --msgbox "Radio-VNC is installed" "${r}" "${c}"
+whiptail --msgbox "System will reboot in 5 seconds" "${r}" "${c}"
 sleep 5
 reboot
