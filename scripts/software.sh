@@ -3,7 +3,7 @@
 USER=pi
 Config=/home/$USER/.config
 
-selection=$(whiptail --title "Test" --separate-output --checklist Choose:" 20 30 15 \
+selection=$(whiptail --title "Test" --separate-output --checklist Choose:"" 20 30 15 \
   "gqrx" "" on \
   "cubicsdr" "" off \
   "cutesdr" "" off \

@@ -125,11 +125,11 @@ systemctl unmask hostapd
 systemctl enable hostapd
 sleep 1
 echo "Set"
-echo "
-"
-echo "Setting up GQRX to start on boot"
+echo ""
+
+echo "Setting up Software Selector to start on boot"
 sleep 1
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/gqrx.desktop -o $config/autostart/gqrx.desktop
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/software.desktop -o $config/autostart/software.desktop
 echo "Set"
 
 echo "Network==Radio-VNC | Network-Password==RaspberryRadio | ip address==192.168.4.1 | hostname==Radio-VNC" >> /home/$USER/info.txt
@@ -165,6 +165,8 @@ echo "Set"
 
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/scripts/update-script.sh -o /usr/bin/update-script.sh
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/setup.sh -o /usr/bin/script.sh
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/uninstall.sh -o /usr/bin/uninstall.sh
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/software.sh -o /usr/bin/software.sh
 
 crontab -l > mycron
 
@@ -177,7 +179,7 @@ fi
 
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/update.sh -o /usr/bin/update.sh
 rm mycron
-chmod +x /usr/bin/update.sh /usr/bin/update-script.sh /usr/bin/script.sh
+chmod +x /usr/bin/update.sh /usr/bin/update-script.sh /usr/bin/script.sh /usr/bin/uninstall.sh /usr/bin/software.sh
 
 if [ "$ARGON"=TRUE ]; then
   curl https://download.argon40.com/argon1.sh | bash
