@@ -6,7 +6,7 @@ else
   exit
 fi
 
-branch=dev
+branch=main
 USER=pi
 #USER=${SUDO_USER:-$(who -m | awk '{ print $1 }')}
 config=/home/$USER/.config
