@@ -2,7 +2,7 @@
 
 USER=pi
 #USER=${SUDO_USER:-$(who -m | awk '{ print $1 }')}
-branch=dev
+branch=main
 
 if (whiptail --title "Radio-VNC update script" --yesno "There is a later version of Radio-VNC available.\nWould you like to update?" 8 78); then
     return
