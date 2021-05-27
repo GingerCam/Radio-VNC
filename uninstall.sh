@@ -6,10 +6,11 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 USER=pi
-branch=dev
+#branch=dev
 config=/home/$USER/.config
 CURRENT_HOSTNAME=`cat /etc/hostname | tr -d " \t\n\r"`
 NEW_HOSTNAME=raspberrypi
+source /opt/Radio-VNC/functions.sh
 
 is_pi () {
   ARCH=$(dpkg --print-architecture)

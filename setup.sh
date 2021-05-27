@@ -20,6 +20,11 @@ wireless_interface=`iw dev | awk '$1=="Interface"{print $2}'`
 webroot="/var/www/html"
 RADIO_VNC_LOCAL_REPO="/etc/.radiovnc"
 
+mkdir /opt/Radio-VNC
+chown $USER:$USER /opt/Radio-VNC
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/funtions.sh -o /opt/Radio-VNC/functions.sh
+source /opt/Radio-VNC/funtions.sh
+
 if [ -t 0 ] ; then
   screen_size=$(stty size)
 else
@@ -36,13 +41,6 @@ c=$(( columns / 2 ))
 r=$(( r < 20 ? 20 : r ))
 c=$(( c < 70 ? 70 : c ))
 
-is_command() {
-    # Checks to see if the given command (passed as a string argument) exists on the system.
-    # The function returns 0 (success) if the command exists, and 1 if it doesn't.
-    local check_command="$1"
-
-    command -v "${check_command}" >/dev/null 2>&1
-}
 
 whiptail --msgbox "Radio-VNC written by GingerCam https://github.com/GingerCam" "${r}" "${c}"
 
@@ -132,7 +130,7 @@ sleep 1
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/software.desktop -o $config/autostart/software.desktop
 echo "Set"
 
-echo "Network==Radio-VNC | Network-Password==RaspberryRadio | ip address==192.168.4.1 | hostname==Radio-VNC" >> /home/$USER/info.txt
+echo "Network==RPI-Radio | Network-Password==RaspberryRadio | ip address==192.168.4.1 | hostname==Radio-VNC" >> /home/$USER/info.txt
 echo "Check /home/$USER/info.txt for more infomation"
 sleep 2
 echo ""
@@ -167,6 +165,7 @@ curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/scripts/updat
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/setup.sh -o /usr/bin/script.sh
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/uninstall.sh -o /usr/bin/uninstall.sh
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/software.sh -o /usr/bin/software.sh
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/cli_program/radiovnc-wifi.sh -o /usr/bin/radiovnc-wifi.sh
 
 crontab -l > mycron
 
@@ -186,7 +185,12 @@ if [ "$ARGON"=TRUE ]; then
 else
   return
 fi
-git clone https://github.com/GingerCam/Radio-VNC.git /opt/Radio-VNC
+
+#if [ "$bluetooth"=TRUE ]; then
+#  apt install $bluetooth_dependices
+#  curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/cli_program/radiovnc-bluetooth.sh -o /usr/bin/radiovnc-bluetooth
+#  chmod +x /usr/bin/radiovnc-bluetooth
+#fi
 
 whiptail --msgbox "Radio-VNC is installed" "${r}" "${c}"
 whiptail --msgbox "System will reboot in 5 seconds" "${r}" "${c}"
