@@ -1,14 +1,6 @@
 #!/bin/bash
 
 branch=dev
-bluetooth_dependices="bluez-tools"
-
-
-if hciconfig >/dev/null 2>&1; then
-  bluetooth=TRUE
-else
-  bluetooth=FALSE
-fi
 
 is_command() {
     # Checks to see if the given command (passed as a string argument) exists on the system.
@@ -67,4 +59,24 @@ chooseInterface() {
             #printf "  %b Using interface: %s\\n" "${INFO}" "${Radio_VNC_INTERFACE}"
         done
     fi
+}
+
+samba_start(){
+  systemctl enable smbd
+  systemctl start smbd
+}
+
+samba_stop(){
+  systemctl disable smbd
+  systemctl stop smbd
+}
+
+samba_config(){
+  echo"
+  [Radio-VNC]
+  path = /
+  writeable=Yes
+  create mask=0777
+  directory mask=0777
+  public=no" /etc/samba/smb.conf
 }

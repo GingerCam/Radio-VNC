@@ -10,6 +10,8 @@ else
     exit 1
 fi
 
+mkdir /mnt
+
 #USER=${SUDO_USER:-$(who -m | awk '{ print $1 }')}
 USER=pi
 branch=dev
@@ -23,7 +25,7 @@ RADIO_VNC_LOCAL_REPO="/etc/.radiovnc"
 mkdir /opt/Radio-VNC
 chown $USER:$USER /opt/Radio-VNC
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/funtions.sh -o /opt/Radio-VNC/functions.sh
-source /opt/Radio-VNC/funtions.sh
+source /opt/Radio-VNC/functions.sh
 
 if [ -t 0 ] ; then
   screen_size=$(stty size)
@@ -61,7 +63,7 @@ optional=$(whiptail --title "Test" --checklist Choose: "${r}" "${c}" \
 echo "Radio-VNC will install hostapd, dnsmasq, GQRX, pixel desktop, vnc-server and all of their dependencies."
 
 apt update && apt upgrade -y
-apt install -y hostapd dnsmasq raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme terminator
+apt install -y hostapd dnsmasq raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme terminator samba samba-common-bin
 apt install $optional
 
 echo "Config files will be downloaded"
@@ -182,16 +184,8 @@ chmod +x /usr/bin/update.sh /usr/bin/update-script.sh /usr/bin/script.sh /usr/bi
 
 if [ "$ARGON"=TRUE ]; then
   curl https://download.argon40.com/argon1.sh | bash
-else
-  return
 fi
-
-#if [ "$bluetooth"=TRUE ]; then
-#  apt install $bluetooth_dependices
-#  curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/cli_program/radiovnc-bluetooth.sh -o /usr/bin/radiovnc-bluetooth
-#  chmod +x /usr/bin/radiovnc-bluetooth
-#fi
-
+samba_config
 whiptail --msgbox "Radio-VNC is installed" "${r}" "${c}"
 whiptail --msgbox "System will reboot in 5 seconds" "${r}" "${c}"
 sleep 5

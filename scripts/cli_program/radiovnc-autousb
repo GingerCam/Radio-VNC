@@ -1,0 +1,15 @@
+#!/bin/bash
+
+source /opt/Radio-VNC/functions.sh
+
+while true; do
+  for filename in /sys/block/*/removeable; do
+    brian=`cat $filename`
+    if [ "$brian" == 1 ]; then
+      usb_device=$filename
+      break
+    fi
+  done
+
+usb_device=`echo $usb | cut -c 12- | rev | cut -c11- | rev`
+mount /dev/$usb_device /mnt

@@ -15,7 +15,7 @@ current_SSID=`cat $wireless_config | grep "^ssid="`
 current_interface=`cat $wireless_config | grep "^interface="`
 current_channel=`cat $wireless_config | grep "^channel="`
 current_password=`cat $wireless_config | grep "^wpa_passphrase="`
-source /opt/Radio-VNC/funtions.sh
+source /opt/Radio-VNC/functions.sh
 
 if [ -t 0 ] ; then
   screen_size=$(stty size)
