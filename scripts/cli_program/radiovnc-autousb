@@ -3,13 +3,45 @@
 source /opt/Radio-VNC/functions.sh
 
 while true; do
-  for filename in /sys/block/*/removeable; do
-    brian=`cat $filename`
-    if [ "$brian" == 1 ]; then
-      usb_device=$filename
-      break
+  root=`findmnt -n -o SOURCE / | cut -c 6- | rev | cut -c 2- | rev`
+  full_root=/dev/$root
+  while true; do
+    for filename in /sys/block/*/removeable; do
+      device=`cat $filename`
+      if [ "$device" == 1 ]; then
+        usb=$filename
+        usb_device=`echo $usb | cut -c 12- | rev | cut -c11- | rev`
+        if [ "$usb_device" != "$root" ]; then
+          break
+          mkdir /mnt
+        fi
+      fi
+    done
+
+    mount /dev/$usb_device /mnt
+    files_usb="dnsmasq.conf dhcpcd.conf hostapd/hostapd.conf radiovnc.conf"
+
+    copy_usb(){
+    for files in $files_usb; do
+      cp /etc/$files /mnt/$files
+    done
+    chown $USER:$USER /mnt/*
+  }
+
+    if [ -f /mnt/radiovnc.conf]; then
+      usb_copy=TRUE
+    else
+      usb_copy=FALSE
     fi
   done
 
-usb_device=`echo $usb | cut -c 12- | rev | cut -c11- | rev`
-mount /dev/$usb_device /mnt
+  if [ "$usb_copy" == FALSE ]; then
+    copy_usb
+    umount /mnt
+  fi
+
+  if [ "$usb_copy" == TRUE]; then
+    for filename in $files_usb; do
+      cp /mnt/$filename /etc/$filename
+    done
+done

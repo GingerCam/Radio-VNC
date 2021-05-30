@@ -72,11 +72,11 @@ samba_stop(){
 }
 
 samba_config(){
-  echo"
+  echo "
   [Radio-VNC]
   path = /
   writeable=Yes
   create mask=0777
   directory mask=0777
-  public=no" /etc/samba/smb.conf
+  public=no" >> /etc/samba/smb.conf
 }

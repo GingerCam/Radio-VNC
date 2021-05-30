@@ -21,7 +21,7 @@ NEW_HOSTNAME=Radio-VNC
 wireless_interface=`iw dev | awk '$1=="Interface"{print $2}'`
 webroot="/var/www/html"
 RADIO_VNC_LOCAL_REPO="/etc/.radiovnc"
-
+radiovnc_conf=/etc/radiovnc.conf
 mkdir /opt/Radio-VNC
 chown $USER:$USER /opt/Radio-VNC
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/funtions.sh -o /opt/Radio-VNC/functions.sh
@@ -163,11 +163,13 @@ fi
 
 echo "Set"
 
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/scripts/update-script.sh -o /usr/bin/update-script.sh
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/setup.sh -o /usr/bin/script.sh
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/uninstall.sh -o /usr/bin/uninstall.sh
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/software.sh -o /usr/bin/software.sh
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/cli_program/radiovnc-wifi.sh -o /usr/bin/radiovnc-wifi.sh
+script_files="update-script.sh update.sh setup.sh uninstall.sh software.sh"
+for file in $script_files; do
+  curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/$file -o /usr/bin/$file &>/dev/null
+  chmod +x /usr/bin/$file
+done
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/radiovnc.conf -o /etc/radiovnc.conf
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/autousb.service -o /etc/systemd/system/autousb.service
 
 crontab -l > mycron
 
@@ -185,6 +187,7 @@ chmod +x /usr/bin/update.sh /usr/bin/update-script.sh /usr/bin/script.sh /usr/bi
 if [ "$ARGON"=TRUE ]; then
   curl https://download.argon40.com/argon1.sh | bash
 fi
+
 samba_config
 whiptail --msgbox "Radio-VNC is installed" "${r}" "${c}"
 whiptail --msgbox "System will reboot in 5 seconds" "${r}" "${c}"

@@ -14,11 +14,13 @@ fi
 
 while [ "$1" != "" ]; do
     case $1 in
-    --start)
+    --start | start)
         start_samba=TRUE
+        stop_samba=FALSE
         ;;
-    --stop)
+    --stop | stop)
         stop_samba=TRUE
+        start_samba=FALSE
         ;;
     -h | --help)
         usage # run usage function
