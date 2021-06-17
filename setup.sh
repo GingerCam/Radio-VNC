@@ -10,7 +10,7 @@ else
     exit 1
 fi
 
-mkdir /mnt
+mkdir /mnt > /dev/null 2>&1
 
 #USER=${SUDO_USER:-$(who -m | awk '{ print $1 }')}
 USER=pi
@@ -19,12 +19,10 @@ config=/home/$USER/.config
 CURRENT_HOSTNAME=`cat /etc/hostname | tr -d " \t\n\r"`
 NEW_HOSTNAME=Radio-VNC
 wireless_interface=`iw dev | awk '$1=="Interface"{print $2}'`
-webroot="/var/www/html"
-RADIO_VNC_LOCAL_REPO="/etc/.radiovnc"
 radiovnc_conf=/etc/radiovnc.conf
-mkdir /opt/Radio-VNC
-chown $USER:$USER /opt/Radio-VNC
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/functions.sh -o /opt/Radio-VNC/functions.sh
+mkdir /opt/Radio-VNC > /dev/null 2>&1
+chown $USER:$USER /opt/Radio-VNC > /dev/null 2>&1
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/functions.sh -o /opt/Radio-VNC/functions.sh > /dev/null 2>&1
 source /opt/Radio-VNC/functions.sh
 
 if [ -t 0 ] ; then
