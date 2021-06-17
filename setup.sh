@@ -24,7 +24,7 @@ RADIO_VNC_LOCAL_REPO="/etc/.radiovnc"
 radiovnc_conf=/etc/radiovnc.conf
 mkdir /opt/Radio-VNC
 chown $USER:$USER /opt/Radio-VNC
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/funtions.sh -o /opt/Radio-VNC/functions.sh
+curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/functions.sh -o /opt/Radio-VNC/functions.sh
 source /opt/Radio-VNC/functions.sh
 
 if [ -t 0 ] ; then
