@@ -46,14 +46,6 @@ c=$(( c < 70 ? 70 : c ))
 
 whiptail --msgbox "Radio-VNC written by GingerCam https://github.com/GingerCam" "${r}" "${c}"
 
-optional=$(whiptail --title "Test" --checklist Choose: "${r}" "${c}" \
-  "gqrx-sdr" "" on \
-  "rtl-sdr" "" off \
-  "cutesdr" "" off \
-  "qusik" "" off \
-  "lysdr" "" off \
-  3>&1 1>&2 2>&3)
-
   if (whiptail --title "Argon One case" --defaultno --yesno "If you have an Argon One case you might want to install the Argon One script.\nWould you like to install it?" "${r}" "${c}"); then
     Argon=TRUE
   else
@@ -64,7 +56,7 @@ echo "Radio-VNC will install hostapd, dnsmasq, GQRX, pixel desktop, vnc-server a
 
 apt update && apt upgrade -y
 apt install -y hostapd dnsmasq raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme terminator samba samba-common-bin
-apt install $optional
+apt install gqrx-sdr rtl-sdr cutesdr qusik lysdr
 
 echo "Config files will be downloaded"
 
