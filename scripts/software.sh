@@ -12,4 +12,4 @@ selection=$(whiptail --title "Test" --separate-output --checklist Choose:"" 20 3
   3>&1 1>&2 2>&3)
 
 
-bash $selection
+$selection
