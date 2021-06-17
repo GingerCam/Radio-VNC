@@ -56,7 +56,7 @@ echo "Radio-VNC will install hostapd, dnsmasq, GQRX, pixel desktop, vnc-server a
 
 apt update && apt upgrade -y
 apt install -y hostapd dnsmasq raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme terminator samba samba-common-bin
-apt install gqrx-sdr rtl-sdr cutesdr qusik lysdr
+apt install gqrx-sdr rtl-sdr cutesdr quisk lysdr
 
 echo "Config files will be downloaded"
 
