@@ -186,7 +186,7 @@ if [ "$ARGON"=TRUE ]; then
 else
   return
 fi
-git clone https://github.com/GingerCam/Radio-VNC.git /opt/Radio-VNC
+
 
 whiptail --msgbox "Radio-VNC is installed" "${r}" "${c}"
 whiptail --msgbox "System will reboot in 5 seconds" "${r}" "${c}"
