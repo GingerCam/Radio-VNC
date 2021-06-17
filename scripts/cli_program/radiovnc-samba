@@ -3,7 +3,7 @@
 source /opt/Radio-VNC/functions.sh
 
 usage(){
-  echo "radiovnc-samba needs arguments\n--start=Start the samba server\n--stop=Stop the samba server\n--help display this message"
+  echo "radiovnc-samba needs arguments --start=Start the samba server --stop=Stop the samba server --help display this message"
   exit
 }
 

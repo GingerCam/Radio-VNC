@@ -1,5 +1,5 @@
 [Desktop Entry]
 Type=Application
 Name=update
-Exec=terminator -f -e "bash /usr/bin/update-script.sh"
+Exec=terminator -f -e "/usr/bin/update-script.sh"
 Terminal=true

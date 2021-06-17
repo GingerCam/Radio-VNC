@@ -5,7 +5,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 if (whiptail --title "Radio-VNC installation script" --yesno "Would you like to install Radio-VNC?" 8 78); then
-    return
+    echo 0
 else
     exit 1
 fi
@@ -81,13 +81,13 @@ sleep 1
 echo "Setting up applications"
 
 if grep -q "DAEMON_CONF="/etc/hostapd/hostapd.conf"" /etc/default/hostapd; then
-  return
+  echo 1
 else
   echo ""DAEMON_CONF="/etc/hostapd/hostapd.conf" >> "/etc/default/hostapd"
 fi
 
 if grep -q "^net.ipv4.ip_forward=1" /etc/sysctl.conf; then
-  return
+  echo 1
 else
   sed -i "s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/" /etc/sysctl.conf
 fi
@@ -146,7 +146,7 @@ sleep 1
 echo ""
 
 if grep -q "^autologin-user=" /etc/lightdm/lightdm.conf ; then
-  return
+  echo 1
 else
   sed /etc/lightdm/lightdm.conf -i -e "s/^\(#\|\)autologin-user=.*/autologin-user=$USER/"
 fi
@@ -155,7 +155,7 @@ echo "Changing hostname to Radio-VNC"
 sleep 1
 
 if grep -q "127.0.1.1 Radio-VNC" /etc/hosts; then
-  return
+  echo 1
 else
   echo $NEW_HOSTNAME > /etc/hostname
   sed -i "s/127.0.1.1.*$CURRENT_HOSTNAME/127.0.1.1\t$NEW_HOSTNAME/g" /etc/hosts
@@ -163,18 +163,31 @@ fi
 
 echo "Set"
 
-script_files="update-script.sh update.sh setup.sh uninstall.sh software.sh"
+script_files="update.sh setup.sh uninstall.sh"
 for file in $script_files; do
   curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/$file -o /usr/bin/$file &>/dev/null
   chmod +x /usr/bin/$file
 done
+
+script_files1="update-script.sh software.sh"
+for file in $script_files1; do
+  curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/scripts/$file -o /usr/bin/$file &>/dev/null
+  chmod +x /usr/bin/$file
+done
+
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/radiovnc.conf -o /etc/radiovnc.conf
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/autousb.service -o /etc/systemd/system/autousb.service
 
+cli_files="radiovnc-wifi radiovnc-samba radiovnc-autousb"
+for file in $cli_files; do
+  curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/scripts/cli_program/$file -o /usr/bin/$file
+  chown $USER:$USER /usr/bin/$file
+  chmod +x /usr/bin/$file
+done
 crontab -l > mycron
 
 if grep -q "@reboot /usr/bin/update.sh" mycron ; then
-  return
+  echo 1
 else
   echo "@reboot /usr/bin/update.sh" >> mycron
   crontab mycron
