@@ -30,7 +30,7 @@ It is recommended to install to a new SD card or USB drive so you don't loose an
 
 To update Radio-VNC a script auto checks for updates on boot through crontab.
 
-The scripts are stored at /usr/bin/update.sh /usr/bin/update-script.sh and the .desktop file is stored on github in /other-files/
+The scripts are stored at /usr/bin/update.sh /usr/bin/update-script.sh and the .desktop file is stored on GitHub in /other-files/
 
 # Uninstalling Radio-vnc
 
@@ -40,12 +40,20 @@ To uninstall Radio-VNC you can execute the command:
 
 This will uninstall Radio-VNC and all of its dependencies
 
-# New radiovnc cli
+# radiovnc cli
 
-There will be a new cli for radiovnc to configure Wi-Fi and bluetooth and other things that i haven't had the idea for yet
+There will be a new CLI for radiovnc to configure Wi-Fi and Bluetooth and other things that i haven't had the idea for yet
 
 The cli will look like the example:
 
 "sudo radiovnc-wifi"
 
-radiovnc- then the thing to confiure
+"sudo radiovnc-samba"
+
+radiovnc- then the thing to configure
+
+# GitHub branches
+
+The "main" branch is for stable and standard use.
+
+The "dev" branch is for testing and is mostly unstable and dysfunctional, so if you aren't a tester or tech "nerd" then i would keep away.
