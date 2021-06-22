@@ -56,4 +56,4 @@ radiovnc- then the thing to configure
 
 The "main" branch is for stable and standard use.
 
-The "dev" branch is for testing and is mostly unstable and dysfunctional, so if you aren't a tester or tech "nerd" then i would keep away.
+The "dev" branch is for testing and is mostly unstable and dysfunctional, so if you aren't a tester or tech "nerd" then i would keep away. But i'm not stopping you from looking at it, so go ahead.
