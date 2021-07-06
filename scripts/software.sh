@@ -8,26 +8,25 @@ selection=$(whiptail --title "Test" --separate-output --checklist Choose:"" 20 3
   "cubicsdr" "" off \
   "cutesdr" "" off \
   "qusik" "" off \
-  "lysdr" "" off \
   3>&1 1>&2 2>&3)
 
 
-if [[ $selection == *"gqrx"* ]]; then
+if [[ $selection =~ "gqrx" ]]; then
   gqrx &
+  /usr/bin/loading_screen.sh --gqrx
 fi
 
-if [[ $selection == *"cubicsdr"* ]]; then
+if [[ $selection =~ "cubicsdr" ]]; then
   CubicSDR %u &
+  /usr/bin/loading_screen.sh --cubicsdr
 fi
 
-if [[ $selection == *"cutesdr"* ]]; then
+if [[ $selection =~ "cutesdr" ]]; then
   CuteSdr &
+  /usr/bin/loading_screen.sh --cutesdr
 fi
 
-if [[ $selection == *"quisk"* ]]; then
+if [[ $selection =~ "quisk" ]]; then
   quisk &
-fi
-
-if [[ $selection == *"lysdr"* ]]; then
-  lysdr &
+  /usr/bin/loading_screen.sh --quisk
 fi
