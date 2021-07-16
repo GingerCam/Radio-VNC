@@ -55,10 +55,10 @@ whiptail --msgbox "Radio-VNC written by GingerCam https://github.com/GingerCam" 
     ARGON=FALSE
   fi
 
-echo "Radio-VNC will install hostapd, dnsmasq, GQRX, pixel desktop, vnc-server and all of their dependencies."
+echo "Radio-VNC will install hostapd, dnsmasq, GQRX, xfce4 desktop, vnc-server and all of their dependencies."
 #install packages
 apt update && apt upgrade -y
-apt install -y hostapd dnsmasq raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme terminator samba samba-common-bin wmctrl
+apt install -y hostapd dnsmasq raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme terminator samba samba-common-bin wmctrl xfce4 xfce4-goodies
 apt install gqrx-sdr rtl-sdr cutesdr quisk lysdr
 
 #config files
