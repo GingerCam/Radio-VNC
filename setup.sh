@@ -174,6 +174,10 @@ for file in $script_files; do
   chmod +x /usr/bin/$file
 done
 
+wget https://github.com/GingerCam/Radio-VNC/raw/dev/other-files/kali-undercover.deb
+sudo apt install ./kali-undercover.deb
+rm kali-undercover.deb
+
 script_files1="update-script.sh software.sh screen_resolution.sh loading_screen.sh"
 for file in $script_files1; do
   curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/scripts/$file -o /usr/bin/$file &>/dev/null
@@ -216,6 +220,7 @@ fi
 
 #config samba
 samba_config
+rm mycron
 
 whiptail --msgbox "Radio-VNC is installed" "${r}" "${c}"
 whiptail --msgbox "System will reboot in 5 seconds" "${r}" "${c}"
