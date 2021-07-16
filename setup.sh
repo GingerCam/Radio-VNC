@@ -58,7 +58,7 @@ whiptail --msgbox "Radio-VNC written by GingerCam https://github.com/GingerCam" 
 echo "Radio-VNC will install hostapd, dnsmasq, GQRX, pixel desktop, vnc-server and all of their dependencies."
 #install packages
 apt update && apt upgrade -y
-apt install -y hostapd dnsmasq raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme terminator samba samba-common-bin
+apt install -y hostapd dnsmasq raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme terminator samba samba-common-bin wmctrl
 apt install gqrx-sdr rtl-sdr cutesdr quisk lysdr
 
 #config files
@@ -138,9 +138,9 @@ echo ""
 
 #wallpaper
 echo "Setting desktop wallpaper"
-wget -O /home/$USER/.config/big_image.png "https://github.com/GingerCam/Radio-VNC/raw/$branch/other-files/images/big_image.png"
-wget -O /home/$USER/.config/small_image.png "https://github.com/GingerCam/Radio-VNC/raw/$branch/other-files/images/small_image.png"
-wget -O /home/$USER/.config/very_small_image.png "https://github.com/GingerCam/Radio-VNC/raw/$branch/other-files/images/very_small_image.png"
+wget -O /home/$USER/Pictures/big_image.png "https://github.com/GingerCam/Radio-VNC/raw/$branch/other-files/images/big_image.png"
+wget -O /home/$USER/Pictures/small_image.png "https://github.com/GingerCam/Radio-VNC/raw/$branch/other-files/images/small_image.png"
+wget -O /home/$USER/Pictures/very_small_image.png "https://github.com/GingerCam/Radio-VNC/raw/$branch/other-files/images/very_small_image.png"
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/items-0.conf -o $config/pcmanfm/LXDE-pi/desktop-items-0.conf
 chown pi:pi $config/pcmanfm/LXDE-pi/desktop-items-0.conf
 echo "Set"
@@ -174,7 +174,7 @@ for file in $script_files; do
   chmod +x /usr/bin/$file
 done
 
-script_files1="update-script.sh software.sh screen_resolution.sh"
+script_files1="update-script.sh software.sh screen_resolution.sh loading_screen.sh"
 for file in $script_files1; do
   curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/scripts/$file -o /usr/bin/$file &>/dev/null
   chmod +x /usr/bin/$file
@@ -191,7 +191,7 @@ for file in $cli_files; do
 done
 curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/update.sh -o /usr/bin/update.sh
 rm mycron
-chmod +x /usr/bin/update.sh /usr/bin/update-script.sh /usr/bin/script.sh /usr/bin/uninstall.sh /usr/bin/software.sh
+chmod +x /usr/bin/update.sh /usr/bin/update-script.sh /usr/bin/setup.sh /usr/bin/uninstall.sh /usr/bin/software.sh
 
 #crontab
 crontab -l > mycron
