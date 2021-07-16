@@ -4,7 +4,7 @@ It is recommended to change the default password for the Pi user.
 It uses GQRX to control the SDR and hostapd and dnsmasq for the access point
 
 # Requirements
-Any Raspberry Pi (The later ones are preferable, as SDR's use a bit of CPU)
+Any Raspberry Pi (The later ones are strongly recommended, as SDR's use a bit of CPU)
 
 A USB SDR
 
@@ -15,6 +15,8 @@ An active internet connection (For the setup process)
 A wireless interface (For the WI-FI network)
 
 Raspberry Pi OS lite installed on the pi
+
+a 32gb sd card (16gb might work)
 
 # Easy install on Raspberry Pi
 
