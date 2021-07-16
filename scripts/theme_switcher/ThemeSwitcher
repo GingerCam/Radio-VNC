@@ -1,0 +1,67 @@
+#!/bin/bash
+
+source /opt/Radio-VNC/functions.sh
+
+sleep 1
+#get terminal size
+if [ -t 0 ] ; then
+  screen_size=$(stty size)
+else
+  screen_size="24 80"
+fi
+
+printf -v rows '%d' "${screen_size%% *}"
+printf -v columns '%d' "${screen_size##* }"
+
+# Divide by two so the dialogs take up half of the screen, which looks nice.
+r=$(( rows / 2 ))
+c=$(( columns / 2 ))
+# Unless the screen is tiny
+r=$(( r < 20 ? 20 : r ))
+c=$(( c < 70 ? 70 : c ))
+
+function Windows_11 {
+  sudo rm -r /home/pi/.config/xfce4/panel
+  sudo rm -r /home/pi/.config/xfce4/xfconf
+  sudo cp -r /usr/share/ThemeSwitcher/Twister11/panel /home/pi/.config/xfce4/panel
+  sudo cp -r /usr/share/ThemeSwitcher/Twister11/xfconf /home/pi/.config/xfce4/xfconf
+  sudo cp /usr/share/ThemeSwitcher/Twister11/lightdm-webkit-greeter.conf /etc/lightdm/lightdm-webkit-greeter.conf
+  
+}
+
+
+selection=(`whiptail --title "ThemeSwitcher" --separate-output --radiolist Choose:"" "${r}" "${c}" \
+  "Windows 11" "" off \
+  "Windows 11 dark" "" off \
+  "Windows 10" "" off \
+  "Windows 10 dark" "" off \
+  "Windows 7" "" off \
+  "Windows XP" "" off \
+  "Windows 95" "" off \
+  "Mac OS " "" off \
+  "Mac OS dark" "" off \
+  "Mac OS Big Sur" "" off \
+  "Mac OS Big Sur dark" "" off \
+  "TwisterOS" "" off \
+  "TwisterOS dark" "" off \
+  3>&1 1>&2 2>&3`)
+
+
+if [[ $selection == "Windows 11" ]]; then
+  Windows_11
+fi
+
+if [[ $selection =~ "cubicsdr" ]]; then
+  CubicSDR %u &
+  /usr/bin/loading_screen.sh --cubicsdr
+fi
+
+if [[ $selection =~ "cutesdr" ]]; then
+  CuteSdr &
+  /usr/bin/loading_screen.sh --cutesdr
+fi
+
+if [[ $selection =~ "quisk" ]]; then
+  quisk &
+  /usr/bin/loading_screen.sh --quisk
+fi

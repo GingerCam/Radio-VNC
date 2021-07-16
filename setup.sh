@@ -55,6 +55,12 @@ whiptail --msgbox "Radio-VNC written by GingerCam https://github.com/GingerCam" 
     ARGON=FALSE
   fi
 
+  if (whiptail --title "ThemeSwitcher" --defaultno --yesno "Would you like to install the ThemeSwitcher?" "${r}" "${c}"); then
+    ThemeSwitcher=TRUE
+  else
+    ThemeSwitcher=FALSE
+  fi
+
 echo "Radio-VNC will install hostapd, dnsmasq, GQRX, xfce4 desktop, vnc-server and all of their dependencies."
 #install packages
 apt update && apt upgrade -y
@@ -216,6 +222,10 @@ fi
 #argon setup
 if [ "$ARGON"=TRUE ]; then
   curl https://download.argon40.com/argon1.sh | bash
+fi
+
+if [ "$ThemeSwitcher"=TRUE ]; then
+  curl https://github.com/GingerCam/Radio-VNC/raw/dev/scripts/theme_switcher/theme_setup.sh | sudo bash
 fi
 
 #config samba
