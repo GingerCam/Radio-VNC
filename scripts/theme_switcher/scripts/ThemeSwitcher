@@ -23,10 +23,14 @@ c=$(( c < 70 ? 70 : c ))
 function Windows_11 {
   sudo rm -r /home/pi/.config/xfce4/panel
   sudo rm -r /home/pi/.config/xfce4/xfconf
+  sudo rm /home/pi/*.twid
   sudo cp -r /usr/share/ThemeSwitcher/Twister11/panel /home/pi/.config/xfce4/panel
   sudo cp -r /usr/share/ThemeSwitcher/Twister11/xfconf /home/pi/.config/xfce4/xfconf
   sudo cp /usr/share/ThemeSwitcher/Twister11/lightdm-webkit-greeter.conf /etc/lightdm/lightdm-webkit-greeter.conf
-  
+  sudo cp /usr/share/ThemeSwitcher/Twister11/gtk.css /home/pi/.config/gtk-3.0
+  sudo cp /usr/share/ThemeSwitcher/Twister11/gtkrc-2.0 /home/pi/.gtkrc-2.0
+  sudo cp /usr/share/ThemeSwitcher/twister11.twid /home/pi/twister11.twid
+  sudo cp /usr/share/ThemeSwitcher/Twister11/logon.mp3 /usr/share/sounds/logon.mp3
 }
 
 
@@ -51,17 +55,52 @@ if [[ $selection == "Windows 11" ]]; then
   Windows_11
 fi
 
-if [[ $selection =~ "cubicsdr" ]]; then
-  CubicSDR %u &
-  /usr/bin/loading_screen.sh --cubicsdr
+if [[ $selection == "Windows 11 dark" ]]; then
+  Windows_11_dark
 fi
 
-if [[ $selection =~ "cutesdr" ]]; then
-  CuteSdr &
-  /usr/bin/loading_screen.sh --cutesdr
+if [[ $selection == "Windows 10" ]]; then
+  Windows_10
 fi
 
-if [[ $selection =~ "quisk" ]]; then
-  quisk &
-  /usr/bin/loading_screen.sh --quisk
+if [[ $selection == "Windows 10 dark" ]]; then
+  Windows_10_dark
 fi
+
+if [[ $selection == "Windows 7" ]]; then
+  Windows_7
+fi
+
+if [[ $selection == "Windows XP" ]]; then
+  Windows_XP
+fi
+
+if [[ $selection == "Windows 95" ]]; then
+  Windows_95
+fi
+
+if [[ $selection == "Mac OS" ]]; then
+  Mac_OS
+fi
+
+if [[ $selection == "Mac OS dark" ]]; then
+  Mac_OS_dark
+fi
+
+if [[ $selection == "Mac OS Big Sur" ]]; then
+  Mac_OS_Big_Sur
+fi
+
+if [[ $selection == "Mac OS Big Sur dark" ]]; then
+  Windows_11
+fi
+
+if [[ $selection == "Twister OS" ]]; then
+  Twister_OS
+fi
+
+if [[ $selection == "Twister OS dark" ]]; then
+  Twister_OS_dark
+fi
+
+

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=first theme 
+Comment=
+Exec=/opt/Radio-VNC/first_theme.sh
+OnlyShowIn=XFCE;
+StartupNotify=false
+Terminal=true
+Hidden=false
