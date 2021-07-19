@@ -4,13 +4,13 @@ source /opt/Radio-VNC/functions.sh
 
 mkdir /usr/share/ThemeSwitcher
 
-wget https://github.com/GingerCam/Radio-VNC/raw/$branch/scripts/theme_switcher/config.tar.gz -O /usr/share/ThemeSwitcher/config.tar.gz
-wget https://github.com/GingerCam/Radio-VNC/raw/$branch/scripts/theme_switcher/Backgrounds.tar.gz -O /home/pi/Backgrounds/Backgrounds.tar.gz
-wget https://github.com/GingerCam/Radio-VNC/raw/$branch/scripts/theme_switcher/desktops.tar.gz -O /home/pi/.config/autostart/desktops.tar.gz
-wget https://github.com/GingerCam/Radio-VNC/raw/$branch/scripts/theme_switcher/icons.tar.gz -O /usr/share/icons/icons.tar.gz
-wget https://github.com/GingerCam/Radio-VNC/raw/$branch/scripts/theme_switcher/themes.tar.gz -O /usr/share/themes/themes.tar.gz
-wget https://github.com/GingerCam/Radio-VNC/raw/$branch/scripts/theme_switcher/panel_restart -O /home/pi/.panel_restart
-wget https://github.com/GingerCam/Radio-VNC/raw/$branch/scrips/theme_switcher/fonts.tar.gz -O /usr/share/fonts
+wget https://github.com/GingerCam/Radio-VNC/raw/$branch/scripts/theme_switcher/archives/config.tar.gz -O /usr/share/ThemeSwitcher/config.tar.gz
+wget https://github.com/GingerCam/Radio-VNC/raw/$branch/scripts/theme_switcher/archives/Backgrounds.tar.gz -O /home/pi/Backgrounds/Backgrounds.tar.gz
+wget https://github.com/GingerCam/Radio-VNC/raw/$branch/scripts/theme_switcher/archives/desktops.tar.gz -O /home/pi/.config/autostart/desktops.tar.gz
+wget https://github.com/GingerCam/Radio-VNC/raw/$branch/scripts/theme_switcher/archives/icons.tar.gz -O /usr/share/icons/icons.tar.gz
+wget https://github.com/GingerCam/Radio-VNC/raw/$branch/scripts/theme_switcher/archives/themes.tar.gz -O /usr/share/themes/themes.tar.gz
+wget https://github.com/GingerCam/Radio-VNC/raw/$branch/scripts/theme_switcher/scripts/panel_restart -O /home/pi/.panel_restart
+wget https://github.com/GingerCam/Radio-VNC/raw/$branch/scrips/theme_switcher/archives/fonts.tar.gz -O /usr/share/fonts
 
 tar -xvzf /usr/share/ThemeSwitcher/config.tar.gz -C /usr/share/ThemeSwitcher/
 tar -xvzf /usr/share/themes/themes.tar.gz -C /usr/share/themes/
