@@ -4,7 +4,7 @@ source /opt/Radio-VNC/functions.sh
 
 sleep 1
 #get terminal size
-if [ -t 0 ] ; then
+if [ -t 0 ]; then
   screen_size=$(stty size)
 else
   screen_size="24 80"
@@ -14,27 +14,230 @@ printf -v rows '%d' "${screen_size%% *}"
 printf -v columns '%d' "${screen_size##* }"
 
 # Divide by two so the dialogs take up half of the screen, which looks nice.
-r=$(( rows / 2 ))
-c=$(( columns / 2 ))
+r=$((rows / 2))
+c=$((columns / 2))
 # Unless the screen is tiny
-r=$(( r < 20 ? 20 : r ))
-c=$(( c < 70 ? 70 : c ))
+r=$((r < 20 ? 20 : r))
+c=$((c < 70 ? 70 : c))
 
-function Windows_11 {
-  sudo rm -r /home/pi/.config/xfce4/panel
-  sudo rm -r /home/pi/.config/xfce4/xfconf
-  sudo rm /home/pi/*.twid
-  sudo cp -r /usr/share/ThemeSwitcher/Twister11/panel /home/pi/.config/xfce4/panel
-  sudo cp -r /usr/share/ThemeSwitcher/Twister11/xfconf /home/pi/.config/xfce4/xfconf
+restart_config() {
+  clear
+  read -p "Restore complete. Your lightdm session will now reload. Press [Enter] when ready to do so."
+  xfdesktop -R
+  sudo systemctl restart lightdm
+}
+
+Windows_11() {
+  pkill xfce4-panel
+  sudo rm -r ~/.config/xfce4/panel
+  sudo rm -r ~/.config/xfce4/xfconf
+  sudo rm ~/*.twid
+  sudo cp -r /usr/share/ThemeSwitcher/Twister11/panel /home/pi/.config/xfce4/
+  sudo cp -r /usr/share/ThemeSwitcher/Twister11/xfconf /home/pi/.config/xfce4/
   sudo cp /usr/share/ThemeSwitcher/Twister11/lightdm-webkit-greeter.conf /etc/lightdm/lightdm-webkit-greeter.conf
   sudo cp /usr/share/ThemeSwitcher/Twister11/gtk.css /home/pi/.config/gtk-3.0
   sudo cp /usr/share/ThemeSwitcher/Twister11/gtkrc-2.0 /home/pi/.gtkrc-2.0
-  sudo cp /usr/share/ThemeSwitcher/twister11.twid /home/pi/twister11.twid
+  sudo cp /usr/share/ThemeSwitcher/twister11.twid /home/pi/.twister11.twid
   sudo cp /usr/share/ThemeSwitcher/Twister11/logon.mp3 /usr/share/sounds/logon.mp3
+  sudo find ~/.config/xfce4/panel -type d -exec chmod 755 {} \;
+  sudo find ~/.config/xfce4/panel -type f -exec chmod 644 {} \;
+  sudo find ~/.config/xfce4/xfconf -type d -exec chmod 755 {} \;
+  sudo find ~/.config/xfce4/xfconf -type f -exec chmod 644 {} \;
+  sudo chown -R $USER:$USER ~/.config/xfce4/panel
+  sudo chown -R $USER:$USER ~/.config/xfce4/xfconf
+  xfconf-query -c xfwm4 -p /general/theme -s Windows-11
+  xfconf-query -c xfwm4 -p /general/title_alignment -s left
+  xfconf-query -c xfwm4 -p /general/title_font -s "WeblySleek UI Semi-Bold 12"
+  xfconf-query -c xfwm4 -p /general/button_layout -s "O|HMC"
+  xfconf-query -c xsettings -p /Gtk/CursorThemeName -s Win10
+  xfconf-query -c xsettings -p /Gtk/FontName -s "WeblySleek UI Semi-Bold 12"
+  xfconf-query -c xsettings -p /Net/IconThemeName -s Windows-11
+  xfconf-query -c xsettings -p /Net/ThemeName -s Windows-11
+  xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s /usr/share/rpd-wallpaper/Twister11.png
+  restart_config
 }
 
+Windows_11_dark() {
+  pkill xfce4-panel
+  sudo rm -r ~/.config/xfce4/panel
+  sudo rm -r ~/.config/xfce4/xfconf
+  sudo cp /usr/share/ThemeSwitcher/Twister11-dark/lightdm-webkit-greeter.conf /etc/lightdm/lightdm-webkit-greeter.conf
+  sudo cp /usr/share/ThemeSwitcher/Twister11-dark/gtk.css /home/pi/.config/gtk-3.0
+  sudo cp /usr/share/ThemeSwitcher/Twister11-dark/gtkrc-2.0 /home/pi/.gtkrc-2.0
+  sudo rm ~/*.twid
+  sudo cp /usr/share/ThemeSwitcher/twister11.twid /home/pi/.twister11-dark.twid
+  sudo cp /usr/share/ThemeSwitcher/Twister11-dark/logon.mp3 /usr/share/sounds/logon.mp3
+  sudo cp -r /usr/share/ThemeSwitcher/Twister11-Dark/panel ~/.config/xfce4
+  sudo cp -r /usr/share/ThemeSwitcher/Twister11-Dark/xfconf ~/.config/xfce4
+  sudo find ~/.config/xfce4/panel -type d -exec chmod 755 {} \;
+  sudo find ~/.config/xfce4/panel -type f -exec chmod 644 {} \;
+  sudo find ~/.config/xfce4/xfconf -type d -exec chmod 755 {} \;
+  sudo find ~/.config/xfce4/xfconf -type f -exec chmod 644 {} \;
+  sudo chown -R $USER:$USER ~/.config/xfce4/panel
+  sudo chown -R $USER:$USER ~/.config/xfce4/xfconf
+  xfconf-query -c xfwm4 -p /general/theme -s Windows-11-Dark
+  xfconf-query -c xfwm4 -p /general/title_alignment -s left
+  xfconf-query -c xfwm4 -p /general/title_font -s "WeblySleek UI Semi-Bold 12"
+  xfconf-query -c xfwm4 -p /general/button_layout -s "O|HMC"
+  xfconf-query -c xsettings -p /Gtk/CursorThemeName -s Win10
+  xfconf-query -c xsettings -p /Gtk/FontName -s "WeblySleek UI Semi-Bold 12"
+  xfconf-query -c xsettings -p /Net/IconThemeName -s Windows-11-Dark
+  xfconf-query -c xsettings -p /Net/ThemeName -s Windows-11-Dark
+  xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s /usr/share/rpd-wallpaper/Twister11-Dark.png
+  restart_config
+}
 
-selection=(`whiptail --title "ThemeSwitcher" --separate-output --radiolist Choose:"" "${r}" "${c}" \
+Windows_10() {
+  pkill xfce4-panel
+  sudo rm -r ~/.config/xfce4/panel
+  sudo rm -r ~/.config/xfce4/xfconf
+  sudo cp -r /usr/share/ThemeSwitcher/RaspbianX/panel ~/.config/xfce4
+  sudo cp -r /usr/share/ThemeSwitcher/RaspbianX/xfconf ~/.config/xfce4
+  sudo cp /usr/share/ThemeSwitcher/RaspbianX/lightdm-webkit-greeter.conf /etc/lightdm/lightdm-webkit-greeter.conf
+  sudo cp /usr/share/ThemeSwitcher/RaspbianX/gtk.css /home/pi/.config/gtk-3.0
+  sudo cp /usr/share/ThemeSwitcher/RaspbianX/gtkrc-2.0 /home/pi/.gtkrc-2.0
+  sudo rm ~/*.twid
+  sudo cp /usr/share/ThemeSwitcher/raspbianx.twid ~/.raspbianx.twid
+  sudo cp /usr/share/ThemeSwitcher/RaspbianX/logon.mp3 /usr/share/sounds/logon.mp3
+  sudo find ~/.config/xfce4/panel -type d -exec chmod 755 {} \;
+  sudo find ~/.config/xfce4/panel -type f -exec chmod 644 {} \;
+  sudo find ~/.config/xfce4/xfconf -type d -exec chmod 755 {} \;
+  sudo find ~/.config/xfce4/xfconf -type f -exec chmod 644 {} \;
+  sudo chown -R $USER:$USER ~/.config/xfce4/panel
+  sudo chown -R $USER:$USER ~/.config/xfce4/xfconf
+  xfconf-query -c xfwm4 -p /general/theme -s Windows-10
+  xfconf-query -c xfwm4 -p /general/title_alignment -s left
+  xfconf-query -c xfwm4 -p /general/title_font -s "WeblySleek UI Semi-Bold 12"
+  xfconf-query -c xfwm4 -p /general/button_layout -s "O|HMC"
+  xfconf-query -c xsettings -p /Gtk/CursorThemeName -s Win10
+  xfconf-query -c xsettings -p /Gtk/FontName -s "WeblySleek UI Semi-Bold 12"
+  xfconf-query -c xsettings -p /Net/IconThemeName -s Windows-10
+  xfconf-query -c xsettings -p /Net/ThemeName -s Windows-10
+  xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s /usr/share/rpd-wallpaper/Twister10.png
+  restart_config
+}
+
+Windows_10_dark() {
+  pkill xfce4-panel
+  sudo rm -r ~/.config/xfce4/panel
+  sudo rm -r ~/.config/xfce4/xfconf
+  sudo cp -r /usr/share/ThemeSwitcher/Nighthawk/panel ~/.config/xfce4
+  sudo cp -r /usr/share/ThemeSwitcher/Nighthawk/xfconf ~/.config/xfce4
+  sudo cp /usr/share/ThemeSwitcher/Nighthawk/lightdm-webkit-greeter.conf /etc/lightdm/lightdm-webkit-greeter.conf
+  sudo cp /usr/share/ThemeSwitcher/Nighthawk/gtk.css /home/pi/.config/gtk-3.0
+  sudo cp /usr/share/ThemeSwitcher/Nighthawk/gtkrc-2.0 /home/pi/.gtkrc-2.0
+  sudo rm ~/*.twid
+  sudo cp /usr/share/ThemeSwitcher/nighthawk.twid ~/.nighthawk.twid
+  sudo cp /usr/share/ThemeSwitcher/Nighthawk/logon.mp3 /usr/share/sounds/logon.mp3
+  sudo find ~/.config/xfce4/panel -type d -exec chmod 755 {} \;
+  sudo find ~/.config/xfce4/panel -type f -exec chmod 644 {} \;
+  sudo find ~/.config/xfce4/xfconf -type d -exec chmod 755 {} \;
+  sudo find ~/.config/xfce4/xfconf -type f -exec chmod 644 {} \;
+  sudo chown -R $USER:$USER ~/.config/xfce4/panel
+  sudo chown -R $USER:$USER ~/.config/xfce4/xfconf
+  xfconf-query -c xfwm4 -p /general/theme -s Windows-10-Dark
+  xfconf-query -c xfwm4 -p /general/title_alignment -s left
+  xfconf-query -c xfwm4 -p /general/title_font -s "WeblySleek UI Semi-Bold 12"
+  xfconf-query -c xfwm4 -p /general/button_layout -s "O|HMC"
+  xfconf-query -c xsettings -p /Gtk/CursorThemeName -s Win10
+  xfconf-query -c xsettings -p /Gtk/FontName -s "WeblySleek UI Semi-Bold 12"
+  xfconf-query -c xsettings -p /Net/IconThemeName -s Windows-10
+  xfconf-query -c xsettings -p /Net/ThemeName -s Windows-10-Dark
+  xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s /usr/share/rpd-wallpaper/Twister10.png
+  restart_config
+}
+
+Windows_7() {
+  pkill xfce4-panel
+  sudo rm -r ~/.config/xfce4/panel
+  sudo rm -r ~/.config/xfce4/xfconf
+  sudo cp -r /usr/share/ThemeSwitcher/Raspbian7/panel ~/.config/xfce4
+  sudo cp -r /usr/share/ThemeSwitcher/Raspbian7/xfconf ~/.config/xfce4
+  sudo cp /usr/share/ThemeSwitcher/Raspbian7/lightdm-webkit-greeter.conf /etc/lightdm/lightdm-webkit-greeter.conf
+  sudo cp /usr/share/ThemeSwitcher/Raspbian7/gtk.css /home/pi/.config/gtk-3.0
+  sudo cp /usr/share/ThemeSwitcher/Raspbian7/gtkrc-2.0 /home/pi/.gtkrc-2.0
+  sudo rm ~/*.twid
+  sudo cp /usr/share/ThemeSwitcher/raspbian7.twid ~/.raspbian7.twid
+  sudo cp /usr/share/ThemeSwitcher/Raspbian7/logon.mp3 /usr/share/sounds/logon.mp3
+  sudo find ~/.config/xfce4/panel -type d -exec chmod 755 {} \;
+  sudo find ~/.config/xfce4/panel -type f -exec chmod 644 {} \;
+  sudo find ~/.config/xfce4/xfconf -type d -exec chmod 755 {} \;
+  sudo find ~/.config/xfce4/xfconf -type f -exec chmod 644 {} \;
+  sudo chown -R $USER:$USER ~/.config/xfce4/panel
+  sudo chown -R $USER:$USER ~/.config/xfce4/xfconf
+  xfconf-query -c xfwm4 -p /general/theme -s Windows-7
+  xfconf-query -c xfwm4 -p /general/title_alignment -s left
+  xfconf-query -c xfwm4 -p /general/title_font -s "WeblySleek UI Semi-Bold 12"
+  xfconf-query -c xfwm4 -p /general/button_layout -s "O|HMC"
+  xfconf-query -c xsettings -p /Gtk/CursorThemeName -s Win10
+  xfconf-query -c xsettings -p /Gtk/FontName -s "WeblySleek UI Semi-Bold 12"
+  xfconf-query -c xsettings -p /Net/IconThemeName -s Windows-7
+  xfconf-query -c xsettings -p /Net/ThemeName -s Windows-7
+  xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s /usr/share/rpd-wallpaper/Raspbian7.png
+  restart_config
+}
+
+Windows_XP() {
+  pkill xfce4-panel
+  sudo rm -r ~/.config/xfce4/panel
+  sudo rm -r ~/.config/xfce4/xfconf
+  sudo cp -r /usr/share/ThemeSwitcher/RaspbianXP/panel ~/.config/xfce4
+  sudo cp -r /usr/share/ThemeSwitcher/RaspbianXP/xfconf ~/.config/xfce4
+  sudo cp /usr/share/ThemeSwitcher/RaspbianXP/lightdm-webkit-greeter.conf /etc/lightdm/lightdm-webkit-greeter.conf
+  sudo cp /usr/share/ThemeSwitcher/RaspbianXP/gtk.css /home/pi/.config/gtk-3.0
+  sudo cp /usr/share/ThemeSwitcher/RaspbianXP/gtkrc-2.0 /home/pi/.gtkrc-2.0
+  sudo rm ~/*.twid
+  sudo cp /usr/share/ThemeSwitcher/raspbianxp.twid ~/.raspbianxp.twid
+  sudo cp /usr/share/ThemeSwitcher/RaspbianXP/logon.mp3 /usr/share/sounds/logon.mp3
+  sudo find ~/.config/xfce4/panel -type d -exec chmod 755 {} \;
+  sudo find ~/.config/xfce4/panel -type f -exec chmod 644 {} \;
+  sudo find ~/.config/xfce4/xfconf -type d -exec chmod 755 {} \;
+  sudo find ~/.config/xfce4/xfconf -type f -exec chmod 644 {} \;
+  sudo chown -R $USER:$USER ~/.config/xfce4/panel
+  sudo chown -R $USER:$USER ~/.config/xfce4/xfconf
+  xfconf-query -c xfwm4 -p /general/theme -s Windows-XP
+  xfconf-query -c xfwm4 -p /general/title_alignment -s left
+  xfconf-query -c xfwm4 -p /general/title_font -s "Noto Sans Display Bold 11"
+  xfconf-query -c xfwm4 -p /general/button_layout -s "O|HMC"
+  xfconf-query -c xsettings -p /Gtk/CursorThemeName -s Win95
+  xfconf-query -c xsettings -p /Gtk/FontName -s "Noto Sans Display 11"
+  xfconf-query -c xsettings -p /Net/IconThemeName -s Windows-XP
+  xfconf-query -c xsettings -p /Net/ThemeName -s Windows-XP
+  xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s /usr/share/rpd-wallpaper/RaspbianXP.jpg
+  restart_config
+}
+
+Windows_95() {
+  pkill xfce4-panel
+  sudo rm -r ~/.config/xfce4/panel
+  sudo rm -r ~/.config/xfce4/xfconf
+  sudo cp -r /usr/share/ThemeSwitcher/Raspbian95/panel ~/.config/xfce4
+  sudo cp -r /usr/share/ThemeSwitcher/Raspbian95/xfconf ~/.config/xfce4
+  sudo cp /usr/share/ThemeSwitcher/Raspbian95/lightdm-webkit-greeter.conf /etc/lightdm/lightdm-webkit-greeter.conf
+  sudo cp /usr/share/ThemeSwitcher/Raspbian95/gtk.css /home/pi/.config/gtk-3.0
+  sudo cp /usr/share/ThemeSwitcher/Raspbian95/gtkrc-2.0 /home/pi/.gtkrc-2.0
+  sudo rm ~/*.twid
+  sudo cp /usr/share/ThemeSwitcher/raspbian95.twid ~/.raspbian95.twid
+  sudo cp /usr/share/ThemeSwitcher/Raspbian95/logon.mp3 /usr/share/sounds/logon.mp3
+  sudo find ~/.config/xfce4/panel -type d -exec chmod 755 {} \;
+  sudo find ~/.config/xfce4/panel -type f -exec chmod 644 {} \;
+  sudo find ~/.config/xfce4/xfconf -type d -exec chmod 755 {} \;
+  sudo find ~/.config/xfce4/xfconf -type f -exec chmod 644 {} \;
+  sudo chown -R $USER:$USER ~/.config/xfce4/panel
+  sudo chown -R $USER:$USER ~/.config/xfce4/xfconf
+  xfconf-query -c xfwm4 -p /general/theme -s Windows-95
+  xfconf-query -c xfwm4 -p /general/title_alignment -s left
+  xfconf-query -c xfwm4 -p /general/title_font -s "W95FA Bold 11"
+  xfconf-query -c xfwm4 -p /general/button_layout -s "O|HMC"
+  xfconf-query -c xsettings -p /Gtk/CursorThemeName -s Win95
+  xfconf-query -c xsettings -p /Gtk/FontName -s "W95FA 12"
+  xfconf-query -c xsettings -p /Net/IconThemeName -s Windows-95
+  xfconf-query -c xsettings -p /Net/ThemeName -s Windows-95
+  xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s /usr/share/rpd-wallpaper/Clouds.png
+  restart_config
+}
+
+selection=($(whiptail --title "ThemeSwitcher" --separate-output --radiolist Choose:"" "${r}" "${c}" \
   "Windows 11" "" off \
   "Windows 11 dark" "" off \
   "Windows 10" "" off \
@@ -48,8 +251,7 @@ selection=(`whiptail --title "ThemeSwitcher" --separate-output --radiolist Choos
   "Mac OS Big Sur dark" "" off \
   "TwisterOS" "" off \
   "TwisterOS dark" "" off \
-  3>&1 1>&2 2>&3`)
-
+  3>&1 1>&2 2>&3))
 
 if [[ $selection == "Windows 11" ]]; then
   Windows_11
@@ -102,5 +304,3 @@ fi
 if [[ $selection == "Twister OS dark" ]]; then
   Twister_OS_dark
 fi
-
-
