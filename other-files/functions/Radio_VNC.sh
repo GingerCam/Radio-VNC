@@ -1,4 +1,4 @@
 #!/bin/bash
 
-branch=dev
+branch=main
 user=pi 
