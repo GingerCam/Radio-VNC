@@ -223,6 +223,10 @@ fi
 samba_config
 rm mycron
 
+wget https://github.com/GingerCam/Radio-VNC/raw/dev/other-files/kali-undercover.deb
+sudo apt install ./kali-undercover.deb
+rm kali-undercover.deb
+
 whiptail --msgbox "Radio-VNC is installed" "${r}" "${c}"
 whiptail --msgbox "System will reboot in 5 seconds" "${r}" "${c}"
 sleep 5
