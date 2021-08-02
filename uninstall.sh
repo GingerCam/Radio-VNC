@@ -6,10 +6,11 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 USER=pi
-branch=dev
+#branch=dev
 config=/home/$USER/.config
 CURRENT_HOSTNAME=`cat /etc/hostname | tr -d " \t\n\r"`
 NEW_HOSTNAME=raspberrypi
+source /opt/Radio-VNC/functions.sh
 
 is_pi () {
   ARCH=$(dpkg --print-architecture)
@@ -35,7 +36,15 @@ fi
 apt purge -y hostapd dnsmasq gqrx-sdr raspberrypi-ui-mods realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme terminator
 apt autoremove
 
-rm -rf $config /home/$USER/background.png /usr/bin/update.sh /usr/bin/update-script.sh /usr/bin/script.sh /home/$USER/info.txt
+script_files="update-script.sh update.sh setup.sh uninstall.sh software.sh"
+for file in $script_files; do
+  rm -rf /usr/bin/$file
+done
+
+cli_files="radiovnc-wifi radiovnc-samba radiovnc-autousb"
+for file in $cli_files; do
+  rm -rf /usr/bin/$file
+done
 
 if grep -q "127.0.1.1 Radio-VNC" /etc/hosts; then
   echo $NEW_HOSTNAME > /etc/hostname
@@ -56,6 +65,7 @@ fi
 
 update-rc.d ssh disable
 update-rc.d ssh stop
+
 
 if grep -q "^net.ipv4.ip_forward=1" /etc/sysctl.conf; then
   sed -i "s/net.ipv4.ip_forward=1/#net.ipv4.ip_forward=1/" /etc/sysctl.conf

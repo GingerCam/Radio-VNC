@@ -2,7 +2,10 @@
 
 USER=pi
 #USER=${SUDO_USER:-$(who -m | awk '{ print $1 }')}
-branch=main
+
+#branch=dev
+source /opt/Radio-VNC/functions.sh
+
 
 if (whiptail --title "Radio-VNC update script" --yesno "There is a later version of Radio-VNC available.\nWould you like to update?" 8 78); then
     return
@@ -16,7 +19,7 @@ else
   exit 1
 fi
 
-psw=$(whiptail --title "Test Password Box" --passwordbox "Enter your password and choose Ok to continue." 10 60 3>&1 1>&2 2>&3)
+psw=$(whiptail --title "Password Box" --passwordbox "Enter your password and choose Ok to continue." 10 60 3>&1 1>&2 2>&3)
     exitstatus=$?
   #statements
     if [ $exitstatus = 0 ]; then

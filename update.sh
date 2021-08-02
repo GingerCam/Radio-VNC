@@ -6,7 +6,9 @@ else
   exit
 fi
 
-branch=main
+source /opt/Radio-VNC/functions.sh
+#branch=dev
+
 USER=pi
 #USER=${SUDO_USER:-$(who -m | awk '{ print $1 }')}
 config=/home/$USER/.config

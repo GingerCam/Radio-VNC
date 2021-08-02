@@ -1,0 +1,42 @@
+#!/bin/bash
+
+source /opt/Radio-VNC/functions.sh
+
+usage(){
+  echo "radiovnc-samba needs arguments --start=Start the samba server --stop=Stop the samba server --help display this message"
+  exit
+}
+
+if [ $# -eq 0 ]; then
+    usage # run usage function
+    exit 1
+fi
+
+while [ "$1" != "" ]; do
+    case $1 in
+    --start | start)
+        start_samba=TRUE
+        stop_samba=FALSE
+        ;;
+    --stop | stop)
+        stop_samba=TRUE
+        start_samba=FALSE
+        ;;
+    -h | --help)
+        usage # run usage function
+        ;;
+    *)
+        usage
+        exit 1
+        ;;
+    esac
+    shift # remove the current value for `$1` and use the next
+done
+
+if [ "$start_samba"=TRUE ]; then
+  samba_start
+fi
+
+if [ "$stop_samba"=TRUE ]; then
+  samba_stop
+fi
