@@ -10,7 +10,7 @@ Radio-VNC is a project that allows you to control an SDR with your phone, you ca
 It is recommended to change the default password for the Pi user.
 It uses hostapd and dnsmasq for the access point
 
-![Radio-VNC icon](https://github.com/GingerCam/Radio-VNC/other-files/images/small_image.png)
+![Radio-VNC icon](https://github.com/GingerCam/Radio-VNC/blob/dev/other-files/images/small_image.png)
 # Requirements
 Any Raspberry Pi (The later ones are strongly recommended, as SDR's use a bit of CPU)
 
