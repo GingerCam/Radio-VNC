@@ -17,5 +17,5 @@ samba_config() {
   writeable=Yes
   create mask=0777
   directory mask=0777
-  public=no" >>/etc/samba/smb.conf
+  public=yes" >>/etc/samba/smb.conf
 }

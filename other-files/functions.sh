@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [[ -d "functions/" ]]; then
-    for file in functions/*.sh; do
+if [[ -d "/opt/Radio-VNC/functions/" ]]; then
+    for file in /opt/Radio-VNC/functions/*.sh; do
         source $file
     done
 else

@@ -20,4 +20,4 @@ else
   return
 fi
 
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/update.desktop -o $config/autostart/update.desktop
+cp /usr/share/Radio-VNC/other-files/update.desktop -o $config/autostart/update.desktop

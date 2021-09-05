@@ -1,8 +1,16 @@
 # Radio-VNC
+
+![GitHub language count](https://img.shields.io/github/languages/count/GingerCam/Radio-VNC)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/GingerCam/Radio-VNC)
+![GitHub repo size](https://img.shields.io/github/repo-size/GingerCam/Radio-VNC)
+![GitHub last commit](https://img.shields.io/github/last-commit/GingerCam/Radio-VNC)
+
+Radio-VNC is meant to be an all in one sdr controller with some cool features!!
 Radio-VNC is a project that allows you to control an SDR with your phone, you can control your pi by connecting to phone or laptop to the WI-FI network produced by the pi. Secondly you use a VNC client to connect to the Pi's IP address (192.168.4.1)
 It is recommended to change the default password for the Pi user.
-It uses GQRX to control the SDR and hostapd and dnsmasq for the access point
+It uses hostapd and dnsmasq for the access point
 
+![Radio-VNC icon](https://github.com/GingerCam/Radio-VNC/other-files/images/small_image.png)
 # Requirements
 Any Raspberry Pi (The later ones are strongly recommended, as SDR's use a bit of CPU)
 
@@ -14,7 +22,7 @@ An active internet connection (For the setup process)
 
 A wireless interface (For the WI-FI network)
 
-Raspberry Pi OS lite installed on the pi
+Raspberry Pi OS installed on the pi
 
 a 32gb sd card (16gb might work)
 
@@ -22,7 +30,11 @@ a 32gb sd card (16gb might work)
 
 First you need to install Raspberry Pi OS lite to an SD card, then boot it up and execute the command:
 
-"curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/main/setup.sh | sudo bash"
+git clone https://github.com/GingerCam/Radio-VNC.git
+
+cd Radio-VNC
+
+sudo bash setup.sh
 
 This project is being actively worked on by myself (GingerCam) and any feedback is greatly appreciated.
 
@@ -52,14 +64,10 @@ The cli will look like the example:
 
 "sudo radiovnc-samba"
 
-radiovnc- then the thing to configure
+radiovnc- (then the thing to configure)
 
 # GitHub branches
 
 The "main" branch is for stable and standard use.
 
 The "dev" branch is for testing and is mostly unstable and dysfunctional, so if you aren't a tester or tech "nerd" then i would keep away. But i'm not stopping you from looking at it, so go ahead.
-
-# THEMES
-
-I will be adding new themes and a new theme selector. The themes will include Windows (11, 10, 7, XP, 95), MacOS/Big Sur. If there is any you would like to be seen added then make an issue and give the label enhancement.   

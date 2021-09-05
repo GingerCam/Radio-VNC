@@ -25,7 +25,8 @@ wireless_interface=$(iw dev | awk '$1=="Interface"{print $2}')
 radiovnc_conf=/etc/radiovnc.conf
 mkdir /opt/Radio-VNC >/dev/null 2>&1
 chown $USER:$USER /opt/Radio-VNC >/dev/null 2>&1
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/functions.sh -o /opt/Radio-VNC/functions.sh >/dev/null 2>&1
+cp other-files/functions.sh  /opt/Radio-VNC/functions.sh >/dev/null 2>&1
+cp -r other-files/functions /opt/Radio-VNC/
 source /opt/Radio-VNC/functions.sh
 
 #get terminal size
@@ -54,28 +55,23 @@ else
   ARGON=FALSE
 fi
 
-#if (whiptail --title "ThemeSwitcher" --defaultno --yesno "Would you like to install the ThemeSwitcher?" "${r}" "${c}"); then
-#  ThemeSwitcher=TRUE
-#else
-#  ThemeSwitcher=FALSE
-#fi
 
 echo "Radio-VNC will install hostapd, dnsmasq, GQRX, xfce4 desktop, vnc-server and all of their dependencies."
 #install packages
 apt update && apt upgrade -y
-apt install -y hostapd dnsmasq raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme terminator samba samba-common-bin wmctrl xfce4 xfce4-goodies
-apt install gqrx-sdr rtl-sdr cutesdr quisk lysdr
+apt install -y hostapd dnsmasq raspberrypi-ui-mods curl wget realvnc-vnc-server realvnc-vnc-viewer figlet lxappearance arc-theme terminator samba samba-common-bin wmctrl xfce4 xfce4-goodies python3 python3-pip
+apt install -y gqrx-sdr rtl-sdr cutesdr quisk lysdr
 
 #config files
-echo "Config files will be downloaded"
+echo "Config files will be copied"
 mkdir -p /home/$USER/.config/autostart /home/$USER/.config/lxsession/LXDE-pi /home/$USER/.config/pcmanfm/LXDE-pi
 chown $USER:$USER /home/$USER/.config
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/dhcpcd.conf -o /etc/dhcpcd.conf
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/dnsmasq.conf -o /etc/dnsmasq.conf
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/hostapd.conf -o /etc/hostapd/hostapd.conf
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/desktop.conf -o $config/lxsession/LXDE-pi/desktop.conf
+cp config/dhcpcd.conf  /etc/dhcpcd.conf
+cp config/dnsmasq.conf /etc/dnsmasq.conf
+cp config/hostapd.conf /etc/hostapd/hostapd.conf
+cp config/desktop.conf $config/lxsession/LXDE-pi/desktop.conf
 
-echo "Config files have been downloaded"
+echo "Config files have been copied"
 sleep 1
 
 #setting up wireless settings
@@ -130,10 +126,10 @@ echo "Set"
 echo ""
 
 #start on boot
-echo "Setting up Software Selector to start on boot"
-sleep 1
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/software.desktop -o $config/autostart/software.desktop
-echo "Set"
+# echo "Setting up Software Selector to start on boot"
+# sleep 1
+# cp other-files/software.desktop $config/autostart/software.desktop
+# echo "Set"
 
 echo "Network==RPI-Radio | Network-Password==RaspberryRadio | ip address==192.168.4.1 | hostname==Radio-VNC" >>/home/$USER/info.txt
 echo "Check /home/$USER/info.txt for more infomation"
@@ -143,10 +139,10 @@ echo ""
 
 #wallpaper
 echo "Setting desktop wallpaper"
-wget -O /home/$USER/Pictures/big_image.png "https://github.com/GingerCam/Radio-VNC/raw/$branch/other-files/images/big_image.png"
-wget -O /home/$USER/Pictures/small_image.png "https://github.com/GingerCam/Radio-VNC/raw/$branch/other-files/images/small_image.png"
-wget -O /home/$USER/Pictures/very_small_image.png "https://github.com/GingerCam/Radio-VNC/raw/$branch/other-files/images/very_small_image.png"
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/items-0.conf -o $config/pcmanfm/LXDE-pi/desktop-items-0.conf
+cp other-files/images/big_image.png /home/$USER/Pictures/big_image.png 
+cp other-files/images/small_image.png /home/$USER/Pictures/small_image.png
+cp other-files/images/very_small_image.png /home/$USER/Pictures/very_small_image.png
+cp config/desktop-items-0.conf $config/pcmanfm/LXDE-pi/desktop-items-0.conf
 chown pi:pi $config/pcmanfm/LXDE-pi/desktop-items-0.conf
 echo "Set"
 sleep 1
@@ -175,28 +171,24 @@ echo "Set"
 #scripts
 script_files="update.sh setup.sh uninstall.sh"
 for file in $script_files; do
-  curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/$file -o /usr/bin/$file &>/dev/null
+  cp $file /usr/bin/$file &>/dev/null
   chmod +x /usr/bin/$file
 done
 
 script_files1="update-script.sh software.sh screen_resolution.sh loading_screen.sh"
 for file in $script_files1; do
-  curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/scripts/$file -o /usr/bin/$file &>/dev/null
+  cp scripts/$file  /usr/bin/$file &>/dev/null
   chmod +x /usr/bin/$file
 done
 
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/config/radiovnc.conf -o /etc/radiovnc.conf
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/other-files/autousb.service -o /etc/systemd/system/autousb.service
+cp config/radiovnc.conf /etc/radiovnc.conf
 
 cli_files="radiovnc-wifi radiovnc-samba radiovnc-autousb"
 for file in $cli_files; do
-  curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/scripts/cli_program/$file -o /usr/bin/$file
+  cp scripts/cli_program/$file /usr/bin/$file
   chown $USER:$USER /usr/bin/$file
   chmod +x /usr/bin/$file
 done
-curl https://raw.githubusercontent.com/GingerCam/Radio-VNC/$branch/update.sh -o /usr/bin/update.sh
-rm mycron
-chmod +x /usr/bin/update.sh /usr/bin/update-script.sh /usr/bin/setup.sh /usr/bin/uninstall.sh /usr/bin/software.sh
 
 #crontab
 crontab -l >mycron
@@ -223,9 +215,10 @@ fi
 samba_config
 rm mycron
 
-wget https://github.com/GingerCam/Radio-VNC/raw/dev/other-files/kali-undercover.deb
-sudo apt install ./kali-undercover.deb
-rm kali-undercover.deb
+sudo apt install ./other-files/kali-undercover.deb
+
+mkdir /usr/share/Radio-VNC
+cp * /usr/share/Radio-VNC
 
 whiptail --msgbox "Radio-VNC is installed" "${r}" "${c}"
 whiptail --msgbox "System will reboot in 5 seconds" "${r}" "${c}"
