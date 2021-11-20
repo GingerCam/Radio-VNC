@@ -1,6 +1,0 @@
-#!/bin/bash
-sleep 8s
-blueman-applet
-pkill ayatana-indicator
-sleep 2s
-xfce4-popup-applicationsmenu && xdotool key 0xff1b
