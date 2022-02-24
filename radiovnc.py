@@ -9,6 +9,12 @@ from radiovnc.core.config.settings import *
 from radiovnc.controllers.sdr import programs, exe, sdr_main
 import urllib.request
 
+hotspot=None
+version=None
+ssh=None
+vnc=None
+smb=None
+
 # variables
 radiovnc_dir = "/usr/share/Radio-VNC/"
 config_file = "/opt/Radio-VNC/radiovnc.conf"
@@ -35,4 +41,3 @@ def getconfig():
     ssh = config.get("services", "ssh")
     vnc = config.get("services", "vnc")
     smb = config.get("services", "samba")
-

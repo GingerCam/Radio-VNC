@@ -38,7 +38,7 @@ def sdr_main():
         except ValueError:
             print("Input must be a number")
         else:
-            if 0 <= selection < 5:
+            if 0 <= selection <= 5:
                 num = programs.get(selection)
                 exe(num)
                 break
